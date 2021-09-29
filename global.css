@@ -10,4 +10,5 @@ html,
 body {
 	-webkit-overflow-scrolling: touch;
 	text-rendering: optimizeSpeed;
+	margin: 0;
 }

@@ -5,6 +5,7 @@ import { AppContext } from './services/AppContext';
 import ReloadPrompt from './ReloadPrompt';
 
 import Home from './pages/home';
+import {SignIn, SignUp} from './pages/auth';
 
 export class App extends Component {
 	state = {};
@@ -22,6 +23,8 @@ export class App extends Component {
 					<Router>
 						<Switch>
 							<Route exact path="/" component={Home} />
+							<Route exact path="/signup" component={SignUp} />
+							<Route exact path="/signin" component={SignIn} />
 						</Switch>
 					</Router>
 				</main>
