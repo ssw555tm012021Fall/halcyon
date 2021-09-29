@@ -1,0 +1,13 @@
+:root {
+	--accent-color: #decd63;
+	--swiper-theme-color: #333333 !important;
+	--sidebar-width: 380px;
+	--tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+		0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+html,
+body {
+	-webkit-overflow-scrolling: touch;
+	text-rendering: optimizeSpeed;
+}
