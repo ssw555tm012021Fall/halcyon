@@ -5,6 +5,11 @@ import { AppContext } from './services/AppContext';
 import ReloadPrompt from './ReloadPrompt';
 
 import Home from './pages/home';
+import Rooms, {SelectedRoom} from './pages/rooms';
+import Music from './pages/music';
+import Meditations from './pages/mediations';
+import Settings from './pages/settings';
+
 import {SignIn, SignUp} from './pages/auth';
 
 export class App extends Component {
@@ -23,6 +28,11 @@ export class App extends Component {
 					<Router>
 						<Switch>
 							<Route exact path="/" component={Home} />
+							<Route exact path="/rooms" component={Rooms} />
+							<Route exact path="/rooms/:id" component={SelectedRoom} />
+							<Route exact path="/music" component={Music} />
+							<Route exact path="/meditations" component={Meditations} />
+							<Route exact path="/settings" component={Settings} />
 							<Route exact path="/signup" component={SignUp} />
 							<Route exact path="/signin" component={SignIn} />
 						</Switch>

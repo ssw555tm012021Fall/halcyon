@@ -2,14 +2,14 @@ import React from 'react';
 import styles from './home.module.css';
 import {BottomBar} from '../components/BottomBar'
 
-export default function Home() {
+export default function Settings() {
 	return (
 		<div className={'view'}>
 			<header>
-				Home
+				Settings
 			</header>
-			<main>Home</main>
-			<BottomBar selected={'home'}/>
+			<main>Settings</main>
+			<BottomBar selected={'settings'}/>
 		</div>
 	);
 }

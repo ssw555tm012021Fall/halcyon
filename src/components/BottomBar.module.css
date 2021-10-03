@@ -1,0 +1,78 @@
+.bottom-bar {
+	width: 100%;
+	height: 52px;
+	background: #000;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.bottom-bar button, .bottom-bar a {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: none;
+	border: none;
+}
+
+.bottom-bar a div {
+	width: 24px;
+	height: 24px;
+	mask-size: cover;
+	background-color: #959595;
+    transition: background-color ease-out 220ms;
+}
+
+a.selected div{
+	background-color: white;
+}
+
+.home {
+	mask-image: url('/assets/icons/home.svg');
+	-webkit-mask-image: url('/assets/icons/home.svg');
+}
+
+.selected .home {
+	mask-image: url('/assets/icons/home_selected.svg');
+	-webkit-mask-image: url('/assets/icons/home_selected.svg');
+}
+
+.room {
+	mask-image: url('/assets/icons/breakout_room.svg');
+	-webkit-mask-image: url('/assets/icons/breakout_room.svg');
+}
+
+.selected .room {
+	mask-image: url('/assets/icons/breakout_room_selected.svg');
+	-webkit-mask-image: url('/assets/icons/breakout_room_selected.svg');
+}
+
+.music {
+	mask-image: url('/assets/icons/music.svg');
+	-webkit-mask-image: url('/assets/icons/music.svg');
+}
+
+.selected .music {
+	mask-image: url('/assets/icons/music_selected.svg');
+	-webkit-mask-image: url('/assets/icons/music_selected.svg');
+}
+
+.meditation {
+	mask-image: url('/assets/icons/meditation.svg');
+	-webkit-mask-image: url('/assets/icons/meditation.svg');
+}
+
+.selected .meditation {
+	mask-image: url('/assets/icons/meditation_selected.svg');
+	-webkit-mask-image: url('/assets/icons/meditation_selected.svg');
+}
+
+.settings {
+	mask-image: url('/assets/icons/settings.svg');
+	-webkit-mask-image: url('/assets/icons/settings.svg');
+}
+
+.selected .settings {
+	mask-image: url('/assets/icons/settings_selected.svg');
+	-webkit-mask-image: url('/assets/icons/settings_selected.svg');
+}

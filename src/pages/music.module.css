@@ -1,0 +1,48 @@
+.music main {
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 200px;
+	gap: 0px 0px;
+	grid-template-areas: '. .';
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.song {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.song a {
+    background: #eaeaea;
+    width: 80%;
+    max-width: 80%;
+    height: 70%;
+    max-height: 70%;
+    border-radius: 8px;
+    padding: 8px;
+    text-decoration: none;
+    color: #000;
+    overflow: hidden;
+}
+
+.song h2, .song h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.song h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.song h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.song span {
+    font-size: 0.8rem;
+}

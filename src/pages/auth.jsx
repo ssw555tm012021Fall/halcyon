@@ -26,7 +26,6 @@ export function SignIn() {
 }
 
 export function SignUp() {
-
     return (
         <div className={styles['view']}>
             <form>
