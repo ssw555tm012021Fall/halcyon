@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import styles from './meditation.module.css';
 import { BottomBar } from '../components/BottomBar';
 import { Link } from 'react-router-dom';
 import { BigPlayer } from '../components/Player';
+import { AppContext } from '../services/AppContext';
+import { Redirect } from 'react-router';
 
 export default function Meditations() {
+	const { isAuthenticated } = useContext(AppContext);
+	if(!isAuthenticated) {
+		return <Redirect to='/signin'/>;
+	}
 	return (
 		<div className={['view', styles['meditations']].join(' ')}>
 			<header>Meditation</header>
@@ -31,6 +37,10 @@ function Meditation() {
 }
 
 export function SelectedMeditation() {
+	const { isAuthenticated } = useContext(AppContext);
+	if(!isAuthenticated) {
+		return <Redirect to='/signin'/>;
+	}
 	return (
 		<div className={styles['selected-meditation']}>
 			<header>

@@ -1,15 +1,18 @@
-import React from 'react';
-import styles from './home.module.css';
-import {BottomBar} from '../components/BottomBar'
+import React, { useContext } from 'react';
+import { BottomBar } from '../components/BottomBar';
+import { AppContext } from '../services/AppContext';
+import { Redirect } from 'react-router';
 
 export default function Home() {
+	const { isAuthenticated } = useContext(AppContext);
+	if(!isAuthenticated) {
+		return <Redirect to='/signin'/>;
+	}
 	return (
 		<div className={'view'}>
-			<header>
-				Home
-			</header>
+			<header>Home</header>
 			<main>Home</main>
-			<BottomBar selected={'home'}/>
+			<BottomBar selected={'home'} />
 		</div>
 	);
 }

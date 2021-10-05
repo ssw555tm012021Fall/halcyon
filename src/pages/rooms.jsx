@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styles from './rooms.module.css';
 import { BottomBar } from '../components/BottomBar'
 import { Link, useParams } from 'react-router-dom';
+import { AppContext } from '../services/AppContext';
+import { Redirect } from 'react-router';
 const rooms = [
 	{
 		id: 1,
@@ -33,6 +35,10 @@ const rooms = [
 	}
 ];
 export default function Rooms() {
+	const { isAuthenticated } = useContext(AppContext);
+	if(!isAuthenticated) {
+		return <Redirect to='/signin'/>;
+	}
 	return (
 		<div className={['view', styles['rooms']].join(' ')}>
 			<header>
@@ -58,6 +64,10 @@ function Room({ id, name, description, startTime, endTime }) {
 
 export function SelectedRoom() {
 	const { id } = useParams();
+	const { isAuthenticated } = useContext(AppContext);
+	if(!isAuthenticated) {
+		return <Redirect to='/signin'/>;
+	}
 	const times = [{
 		id: 1,
 		time: '9:00AM',
