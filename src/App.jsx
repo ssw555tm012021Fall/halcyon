@@ -5,23 +5,30 @@ import { AppContext } from './services/AppContext';
 import ReloadPrompt from './ReloadPrompt';
 
 import Home from './pages/home';
-import Rooms, {SelectedRoom} from './pages/rooms';
-import Music, {SelectedSong} from './pages/music';
-import Meditations, {SelectedMeditation} from './pages/mediations';
+import Rooms, { SelectedRoom } from './pages/rooms';
+import Music, { SelectedSong } from './pages/music';
+import Meditations, { SelectedMeditation } from './pages/mediations';
 import Settings from './pages/settings';
 
-import {SignIn, SignUp} from './pages/auth';
+import { SignIn, SignUp } from './pages/auth';
+import Api from './services/Api'
+const host = 'http://localhost:3000'
 
 export class App extends Component {
-	state = {};
+	state = {
+		api: new Api(host)
+	};
+	
 	componentDidMount() {
-		
+
 	}
 
 	render() {
+		const { api } = this.state;
 		return (
 			<AppContext.Provider
 				value={{
+					api
 				}}
 			>
 				<main className={styles['app']}>

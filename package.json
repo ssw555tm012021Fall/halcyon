@@ -6,6 +6,7 @@
   "author": "Jose J. Cruz <jjzcru@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.22.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
