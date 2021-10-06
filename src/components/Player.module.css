@@ -1,0 +1,74 @@
+.big-player {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	padding-top: 20px;
+}
+
+.big-player .information {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	align-items: center;
+}
+
+.big-player .information img {
+	width: 50vw;
+	height: 50vw;
+	border: 0px;
+	overflow: hidden;
+	background: #eaeaea;
+	border-image-width: 0px;
+	border-radius: 12px;
+}
+
+.big-player .information small {
+	margin-top: 20px;
+}
+
+.big-player .slider {
+	margin-top: 50px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.big-player .slider input {
+	width: 80%;
+}
+
+.big-player .controls {
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns:  0.8fr 1.4fr 0.8fr; 
+	grid-template-rows: 1fr;
+	gap: 0px 0px;
+	grid-template-areas: '. . .';
+}
+
+.big-player .controls div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.big-player .rewind button, .big-player .forward button {
+    width: 50px;
+    height: 50px;
+    background: #eaeaea;
+    border: none;
+    border-radius: 50%;
+}
+
+.big-player .play button{
+    width: 100px;
+    height: 100px;
+    background: #eaeaea;
+    border: none;
+    border-radius: 50%;
+}

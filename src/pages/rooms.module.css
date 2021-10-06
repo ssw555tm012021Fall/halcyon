@@ -1,0 +1,128 @@
+.rooms main {
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1fr 1fr;
+	grid-auto-rows: 200px;
+	gap: 0px 0px;
+	grid-template-areas: '. .';
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.room {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.room a {
+	background: #eaeaea;
+	width: 80%;
+	max-width: 80%;
+	height: 70%;
+	max-height: 70%;
+	border-radius: 8px;
+	padding: 8px;
+	text-decoration: none;
+	color: #000;
+	overflow: hidden;
+}
+
+.room h2,
+.room h3 {
+	margin: 0;
+	padding: 0;
+}
+
+.room h2 {
+	font-size: 1.5rem;
+	margin-bottom: 10px;
+}
+
+.room h3 {
+	font-size: 1rem;
+	margin-bottom: 10px;
+}
+
+.room span {
+	font-size: 0.8rem;
+}
+
+/*SELECTED ROOM*/
+.selected-room {
+	position: fixed;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1fr;
+	grid-template-rows: 52px 1fr;
+	gap: 0px 0px;
+	grid-template-areas:
+		'.'
+		'.';
+}
+
+.selected-room header {
+	height: 52px;
+	border-bottom: 1px solid #eaeaea;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+    padding: 0px 16px;
+}
+
+.selected-room header a {
+    display: flex;
+	justify-content: center;
+	align-items: center;
+	background: none;
+	border: none;
+}
+
+.selected-room .back {
+    width: 24px;
+	height: 24px;
+	mask-size: cover;
+    background-color: #3d3dd3;
+	mask-image: url('/assets/icons/back.svg');
+	-webkit-mask-image: url('/assets/icons/back.svg');
+}
+
+.selected-room header > :last-child {
+    width: 24px;
+}
+
+.selected-room main {
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1fr 1fr;
+	grid-auto-rows: 50px;
+	gap: 0px 0px;
+	grid-template-areas: '. .';
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.selected-room .time {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.selected-room .time span {
+	width: 80%;
+	color: #c4c4c4;
+	border: 1px solid #c4c4c4;
+	text-align: center;
+	padding: 4px;
+	border-radius: 4px;
+    cursor: pointer;
+    transition: color ease-out 220ms, border ease-out 220ms;
+}
+
+.selected-room .time span:hover {
+	color: #000;
+    border: 1px solid #000;
+}

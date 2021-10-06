@@ -1,27 +1,76 @@
 import React, { Component } from 'react';
 import styles from './app.module.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { AppContext } from './services/AppContext';
 import ReloadPrompt from './ReloadPrompt';
 
 import Home from './pages/home';
+import Rooms, { SelectedRoom } from './pages/rooms';
+import Music, { SelectedSong } from './pages/music';
+import Meditations, { SelectedMeditation } from './pages/mediations';
+import Settings from './pages/settings';
+
+import { SignIn, SignUp } from './pages/auth';
+import Api from './services/Api';
+const host = 'http://4a90-108-46-139-211.ngrok.io';
 
 export class App extends Component {
-	state = {};
-	componentDidMount() {
-		
-	}
+	state = {
+		api: new Api(host),
+	};
+
+	componentDidMount() {}
+
+	validateToken = () => {
+		if (!localStorage.getItem('token')) {
+			window.location = '/signin';
+		}
+	};
 
 	render() {
+		const { api } = this.state;
 		return (
 			<AppContext.Provider
 				value={{
+					api,
+					validateToken: this.validateToken,
+					isAuthenticated: localStorage.getItem('token')
 				}}
 			>
 				<main className={styles['app']}>
 					<Router>
 						<Switch>
+							<Route exact path="/rooms" component={Rooms} />
+							<Route
+								exact
+								path="/rooms/:id"
+								component={SelectedRoom}
+							/>
+							<Route exact path="/music" component={Music} />
+							<Route
+								exact
+								path="/music/:id"
+								component={SelectedSong}
+							/>
+							<Route
+								exact
+								path="/meditations"
+								component={Meditations}
+							/>
+							<Route
+								exact
+								path="/meditations/:id"
+								component={SelectedMeditation}
+							/>
+							<Route
+								exact
+								path="/settings"
+								component={Settings}
+							/>
+							<Route exact path="/signup" component={SignUp} />
+							<Route exact path="/signin" component={SignIn} />
 							<Route exact path="/" component={Home} />
+							<Redirect to="/" />
 						</Switch>
 					</Router>
 				</main>
