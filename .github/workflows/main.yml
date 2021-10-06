@@ -33,6 +33,10 @@ jobs:
       - name: Install modules
         run: yarn
 
-      # Runs a set of commands using the runners shell
+      # Run application tests
       - name: Run tests
         run: yarn test
+      
+      # Run code coverage
+      - name: Run coverage
+        run: yarn coverage
