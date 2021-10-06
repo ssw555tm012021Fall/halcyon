@@ -1,6 +1,6 @@
 import * as axios from 'axios';
 
-export default class Api {
+export class Api {
 	constructor(host) {
 		this.host = host;
 	}
@@ -12,7 +12,9 @@ export default class Api {
 				email,
 				password,
 			});
-			console.log(data);
+			return {
+				success: true,
+			};
 		} catch (e) {
 			console.error(e);
 		}
@@ -28,7 +30,6 @@ export default class Api {
 				password,
 			});
 			const { auth_token } = data;
-			console.log(auth_token)
 			return auth_token;
 		} catch (e) {
 			throw new Error(e.response.data.message);

@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import styles from './app.module.css';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Route,
+	Switch,
+	Redirect,
+} from 'react-router-dom';
 import { AppContext } from './services/AppContext';
 import ReloadPrompt from './ReloadPrompt';
 
@@ -11,7 +16,7 @@ import Meditations, { SelectedMeditation } from './pages/mediations';
 import Settings from './pages/settings';
 
 import { SignIn, SignUp } from './pages/auth';
-import Api from './services/Api';
+import { Api } from './services/Api';
 const host = 'http://4a90-108-46-139-211.ngrok.io';
 
 export class App extends Component {
@@ -34,7 +39,7 @@ export class App extends Component {
 				value={{
 					api,
 					validateToken: this.validateToken,
-					isAuthenticated: localStorage.getItem('token')
+					isAuthenticated: localStorage.getItem('token'),
 				}}
 			>
 				<main className={styles['app']}>
