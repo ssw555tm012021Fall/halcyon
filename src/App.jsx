@@ -17,14 +17,19 @@ import Settings from './pages/settings';
 
 import { SignIn, SignUp } from './pages/auth';
 import { Api } from './services/Api';
-const host = 'http://4a90-108-46-139-211.ngrok.io';
+const host = 'http://localhost:3000/api';
 
 export class App extends Component {
 	state = {
 		api: new Api(host),
 	};
 
-	componentDidMount() {}
+	componentDidMount() {
+		const {api} = this.state;
+		if (localStorage.getItem('token')) {
+			api.setToken(localStorage.getItem('token'))
+		}
+	}
 
 	validateToken = () => {
 		if (!localStorage.getItem('token')) {

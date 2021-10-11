@@ -1,35 +1,83 @@
 const { Api } = require('../Api');
-const axios = require('axios');
+jest.setTimeout(30000);
+const host = 'https://halcyon-next-develop.vercel.app/api';
+const credentials = {
+	email: 'viyeta@gmail.com',
+	password: 'password',
+};
 
-jest.mock('axios');
-let api;
-beforeEach(() => {
-	api = new Api('http://localhost:3000');
+/*before(async () => {
+	
+    console.log(`Token`, token)
+    jest.resetAllMocks();
+});*/
+
+test('Test login', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	expect(token).toBeDefined();
 });
 
-it('It should register a user', async () => {
-	axios.post.mockResolvedValue({
-		data: { success: true },
-	});
-
-	const {success} = await api.signUp({
-        email: 'jjzcru@gmail.com',
-        password: 'password'
-    });
-	expect(success).toEqual(true);
+test('Get meditation rooms', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token);
+	const rooms = await api.getRooms();
+	expect(token).toBeDefined();
+	expect(rooms.length).toBeGreaterThan(0);
 });
 
-it('It should login a user', async () => {
-	axios.post.mockResolvedValue({
-		data: { 
-            auth_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
-        },
-	});
+test('Get meditation room by id', async () => {
+	const id = '700359396337395473';
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token);
+	const room = await api.getRoom(id);
+	expect(room).toBeDefined();
+	expect(room.id).toBe(id);
+});
 
-	const token = await api.signIn({
-        email: 'viyeta@gmail.com',
-        password: 'password'
-    });
-    expect(typeof token).toBe("string");
-	expect(token.length).toBeGreaterThan(0);
+test.skip('Book meditation room', async () => {
+	const roomId = '700359396337395473';
+	const time = '14:30';
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token);
+	const success = await api.addReservation({
+		roomId,
+		time,
+	});
+	expect(success).toBe(true);
+});
+
+test.skip('Get reservation from employee', async () => {
+	const roomId = '700359396337395473';
+	const time = '14:30';
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token);
+	const success = await api.addReservation({
+		roomId,
+		time,
+	});
+	expect(success).toBe(true);
+	const reservation = await api.getReservation();
+	expect(reservation).toBeDefined();
+	expect(typeof reservation).toBe('object');
+	expect(reservation.startTime).toBe(time);
+});
+
+test.skip('Cancel a booked reservation', async () => {
+	const roomId = '700359396337395473';
+	const time = '14:30';
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token);
+	let success = await api.addReservation({
+		roomId,
+		time,
+	});
+	expect(success).toBe(true);
+	success = await api.cancelReservation({roomId});
+	expect(success).toBe(true);
 });

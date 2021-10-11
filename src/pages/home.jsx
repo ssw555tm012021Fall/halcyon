@@ -10,8 +10,8 @@ export default function Home() {
 	}
 	return (
 		<div className={'view'}>
-			<header>Home</header>
-			<main>Home</main>
+			<header className={'header'}>Home</header>
+			<main className={'content'}>Home</main>
 			<BottomBar selected={'home'} />
 		</div>
 	);

@@ -3,6 +3,9 @@ import reactRefresh from '@vitejs/plugin-react-refresh';
 import { VitePWA } from 'vite-plugin-pwa';
 
 const config = vite.defineConfig({
+	server: {
+		port: 5000
+	},
 	build: {
 		sourcemap: process.env.SOURCE_MAP === 'true',
 	},
