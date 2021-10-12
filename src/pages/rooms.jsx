@@ -23,25 +23,35 @@ export default function Rooms() {
 			})
 			.then((result) => {
 				setRooms(result);
-				setIsLoading(false);
 			})
 			.catch((e) => {
 				console.error(e);
+			})
+			.finally(() => {
 				setIsLoading(false);
 			});
 	}, []);
 
+	const classes = ['view', styles['rooms']];
 	let component = <Loading />;
 	if (!isLoading) {
-		component = rooms
-			.filter((room) => !!room.availableTimes.length)
-			.map((room) => <Room key={room.id} {...room} />);
+		component = rooms.filter((room) => !!room.availableTimes.length);
+		if (component.length) {
+			component = component.map((room) => (
+				<Room key={room.id} {...room} />
+			));
+		} else {
+			classes.push(styles['empty-room']);
+			component = <EmptyRoom />;
+		}
+
 		if (reservation) {
 			component = <Reservation {...reservation} />;
 		}
+	} else {
+		classes.push(styles['loading-view']);
 	}
 
-	const classes = ['view', styles['rooms']];
 	if (reservation) {
 		classes.push(styles['reservation-container']);
 	}
@@ -51,6 +61,15 @@ export default function Rooms() {
 			<header>Room</header>
 			<main>{component}</main>
 			<BottomBar selected={'room'} />
+		</div>
+	);
+}
+
+function EmptyRoom() {
+	return (
+		<div>
+			There are not available rooms to book at this time, please try again
+			later
 		</div>
 	);
 }
@@ -146,7 +165,7 @@ function Time({ time, roomId }) {
 }
 
 function Loading() {
-	return <div className={styles['loading']}>Loading</div>;
+	return <div className={styles['loading']}/>;
 }
 
 function Reservation({ id, date, startTime, endTime, meditationRoomId }) {
