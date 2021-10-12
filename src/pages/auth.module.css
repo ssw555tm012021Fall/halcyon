@@ -82,10 +82,19 @@
 
 .view button {
 	width: 100%;
-	border: 1px solid #eaeaea;
+	border: 1px solid #45C0E9;
 	border-radius: 4px;
 	height: 52px;
 	margin: 20px auto;
+	color: #fff;
+	font-size: 1rem;
+	font-weight: bold;
+	background: #45C0E9;
+	transition: opacity ease-out 220ms;
+}
+
+.view button:disabled {
+	opacity: 0.5;
 }
 
 @media screen and (orientation:landscape) and (min-width: 968px) {
