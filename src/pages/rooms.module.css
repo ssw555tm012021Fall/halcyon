@@ -1,10 +1,10 @@
 .rooms main {
 	display: grid;
 	grid-auto-columns: 1fr;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr;
 	grid-auto-rows: 200px;
 	gap: 0px 0px;
-	grid-template-areas: '. .';
+	grid-template-areas: '.';
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -16,32 +16,65 @@
 }
 
 .room a {
-	background: #eaeaea;
+	border: 1px solid #c4c4c4;
 	width: 80%;
 	max-width: 80%;
-	height: 70%;
-	max-height: 70%;
+	min-height: 70%;
 	border-radius: 8px;
-	padding: 8px;
 	text-decoration: none;
-	color: #000;
+	color: #c4c4c4;
 	overflow: hidden;
+	transition: color ease-out 220ms, border ease-out 220ms;
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1.3fr 0.7fr;
+	grid-template-rows: 1fr;
+	gap: 0px 0px;
+	grid-template-areas: '. .';
+}
+
+.room a div {
+	padding: 8px;
+}
+
+.room picture{
+	border-left: 1px solid #c4c4c4;
+	background: #c4c4c4;
+	transition: background ease-out 220ms;
+}
+
+.room a:hover {
+	border: 1px solid #000;
+	color: #000;
+}
+
+.room a:hover picture{
+	background: #000;
 }
 
 .room h2,
-.room h3 {
+.room h3 .room h4 {
 	margin: 0;
 	padding: 0;
 }
 
 .room h2 {
-	font-size: 1.5rem;
-	margin-bottom: 10px;
+	font-size: 1.2rem;
+	margin-bottom: 4px;
 }
 
 .room h3 {
+	margin-top: 8px;
 	font-size: 1rem;
-	margin-bottom: 10px;
+	font-weight: 400;
+	margin-bottom: 8px;
+}
+
+.room h4 {
+	margin-top: 4px;
+	font-weight: 400;
+	font-size: 0.9rem;
+	margin-bottom: 4px;
 }
 
 .room span {
@@ -70,11 +103,11 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-    padding: 0px 16px;
+	padding: 0px 16px;
 }
 
 .selected-room header a {
-    display: flex;
+	display: flex;
 	justify-content: center;
 	align-items: center;
 	background: none;
@@ -82,16 +115,16 @@
 }
 
 .selected-room .back {
-    width: 24px;
+	width: 24px;
 	height: 24px;
 	mask-size: cover;
-    background-color: #3d3dd3;
+	background-color: #3d3dd3;
 	mask-image: url('/assets/icons/back.svg');
 	-webkit-mask-image: url('/assets/icons/back.svg');
 }
 
 .selected-room header > :last-child {
-    width: 24px;
+	width: 24px;
 }
 
 .selected-room main {
@@ -118,11 +151,164 @@
 	text-align: center;
 	padding: 4px;
 	border-radius: 4px;
-    cursor: pointer;
-    transition: color ease-out 220ms, border ease-out 220ms;
+	cursor: pointer;
+	transition: color ease-out 220ms, border ease-out 220ms;
 }
 
 .selected-room .time span:hover {
 	color: #000;
-    border: 1px solid #000;
+	border: 1px solid #000;
+}
+
+/*RESERVATION*/
+.reservation-container main {
+	display: unset;
+	overflow: hidden;
+}
+.reservation {
+	width: 100%;
+	height: 100%;
+}
+
+.reservation h2 {
+	margin: 0;
+	padding-top: 20px;
+	padding-left: 20px;
+}
+
+.reservation h3 {
+	margin-top: 20px;
+	padding-left: 20px;
+}
+
+.reservation section {
+	display: block;
+	min-height: 300px;
+	margin: 50px auto;
+	width: 80%;
+	position: relative;
+	border-radius: 8px;
+	overflow: hidden;
+	border: 1px solid #c4c4c4;
+	display: flex;
+	flex-direction: column;
+}
+
+.reservation section h4,
+.reservation section p,
+.reservation section small {
+	display: block;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.reservation section h4 {
+	text-transform: capitalize;
+}
+
+.reservation section small {
+	padding-top: 8px;
+}
+
+.reservation section footer {
+	margin-top: auto;
+	width: 100%;
+	border-top: 1px solid #c4c4c4;
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.reservation section button {
+	width: 120px;
+	border: 0;
+	height: auto;
+	padding: 8px;
+	border-radius: 8px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.reservation .cancel-btn {
+	background: rgb(255, 59, 48);
+	color: #fff;
+}
+
+.reservation .update-btn {
+	background: #0098bb;
+	color: #fff;
+}
+
+.reservation .update-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	background: #c4c4c4;
+}
+
+.reservation .dates nav {
+	height: 48px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	border-bottom: 1px solid #c4c4c4;
+	padding-left: 8px;
+}
+
+.reservation .dates nav button {
+	border: none;
+	background: none;
+	font-weight: 400;
+	width: auto;
+}
+
+.reservation .dates > div {
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr;
+	gap: 0px 0px;
+	grid-template-areas: '. . .';
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.reservation .dates .times > div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.reservation .dates .times span {
+	width: 80%;
+	height: 48px;
+	color: #c4c4c4;
+	border: 1px solid #c4c4c4;
+	border-radius: 4px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	transition: color ease-out 220ms, border ease-out 220ms;
+}
+
+.reservation .dates .times span:hover {
+	color: #3d3d3d;
+	border: 1px solid #3d3d3d;
+}
+
+@media screen and (min-width: 968px) {
+	.rooms main {
+		display: grid;
+		grid-auto-columns: 1fr;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+		grid-auto-rows: 200px;
+		gap: 0px 0px;
+		grid-template-areas: '. . . .';
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
 }

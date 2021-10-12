@@ -3,6 +3,7 @@ import moment from 'moment';
 
 export class Api {
 	token = '';
+	timezone = '';
 	constructor(host) {
 		this.host = host;
 	}
@@ -37,8 +38,31 @@ export class Api {
 				email,
 				password,
 			});
-			const { auth_token } = data;
-			return auth_token;
+			const { authToken, expiredAt } = data;
+			return {
+				authToken,
+				expiredAt
+			};
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	};
+
+	getMe = async () => {
+		const url = `${this.host}/me`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`,
+				},
+			});
+
+			let { employee } = data;
+			return employee;
 		} catch (e) {
 			if (e.response?.data?.message) {
 				throw new Error(e.response?.data.message);
@@ -54,6 +78,7 @@ export class Api {
 			const { data } = await axios.get(url, {
 				headers: {
 					authorization: `Bearer ${this.token}`,
+					'x-time-zone': this.timezone
 				},
 			});
 
@@ -84,6 +109,7 @@ export class Api {
 			const { data } = await axios.get(url, {
 				headers: {
 					authorization: `Bearer ${this.token}`,
+					'x-time-zone': this.timezone
 				},
 			});
 			const { room } = data;
@@ -118,6 +144,35 @@ export class Api {
 			}, {
 				headers: {
 					authorization: `Bearer ${this.token}`,
+					'x-time-zone': this.timezone
+				},
+			});
+			const {status} = data;
+			return status === 'success';
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	updateReservation = async ({roomId, time}) => {
+		const url = `${this.host}/rooms/${roomId}/update`;
+		const now = moment(new Date());
+		const timeMoment = moment(time, 'HH:mm');
+		if(!timeMoment.isAfter(now)) {
+			throw new Error(`That's not a valid time`)
+		}
+		
+		try {
+			const { data } = await axios.post(url, {
+				time,
+			}, {
+				headers: {
+					authorization: `Bearer ${this.token}`,
+					'x-time-zone': this.timezone
 				},
 			});
 			const {status} = data;
@@ -137,9 +192,17 @@ export class Api {
 			const { data } = await axios.get(url, {
 				headers: {
 					authorization: `Bearer ${this.token}`,
+					'x-time-zone': this.timezone
 				},
 			});
 			const { reservation } = data;
+			if(reservation) {
+				const now = moment(new Date());
+				const startMoment = moment(reservation.startTime, 'HH:mm');
+				if(now.isAfter(startMoment)) {
+					return null;
+				}
+			}
 			return reservation;
 		} catch (e) {
 			if (e.response?.data?.message) {
@@ -157,6 +220,7 @@ export class Api {
 			const { data } = await axios.post(url, {}, {
 				headers: {
 					authorization: `Bearer ${this.token}`,
+					'x-time-zone': this.timezone
 				},
 			});
 			const {status} = data;

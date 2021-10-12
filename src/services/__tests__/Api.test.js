@@ -1,6 +1,6 @@
 const { Api } = require('../Api');
 jest.setTimeout(30000);
-const host = 'https://halcyon-next-develop.vercel.app/api';
+const host = 'http://localhost:3000/api';
 const credentials = {
 	email: 'viyeta@gmail.com',
 	password: 'password',
@@ -15,13 +15,22 @@ const credentials = {
 test('Test login', async () => {
 	const api = new Api(host);
 	const token = await api.signIn(credentials);
-	expect(token).toBeDefined();
+	expect(token.authToken).toBeDefined();
+});
+
+test('Get me', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	expect(token.authToken).toBeDefined();
+	api.setToken(token.authToken);
+	const me = await api.getMe();
+	expect(me).toBeDefined();
 });
 
 test('Get meditation rooms', async () => {
 	const api = new Api(host);
 	const token = await api.signIn(credentials);
-	api.setToken(token);
+	api.setToken(token.authToken);
 	const rooms = await api.getRooms();
 	expect(token).toBeDefined();
 	expect(rooms.length).toBeGreaterThan(0);
@@ -31,7 +40,7 @@ test('Get meditation room by id', async () => {
 	const id = '700359396337395473';
 	const api = new Api(host);
 	const token = await api.signIn(credentials);
-	api.setToken(token);
+	api.setToken(token.authToken);
 	const room = await api.getRoom(id);
 	expect(room).toBeDefined();
 	expect(room.id).toBe(id);
@@ -42,7 +51,7 @@ test.skip('Book meditation room', async () => {
 	const time = '14:30';
 	const api = new Api(host);
 	const token = await api.signIn(credentials);
-	api.setToken(token);
+	api.setToken(token.authToken);
 	const success = await api.addReservation({
 		roomId,
 		time,
@@ -55,7 +64,7 @@ test.skip('Get reservation from employee', async () => {
 	const time = '14:30';
 	const api = new Api(host);
 	const token = await api.signIn(credentials);
-	api.setToken(token);
+	api.setToken(token.authToken);
 	const success = await api.addReservation({
 		roomId,
 		time,
@@ -72,7 +81,7 @@ test.skip('Cancel a booked reservation', async () => {
 	const time = '14:30';
 	const api = new Api(host);
 	const token = await api.signIn(credentials);
-	api.setToken(token);
+	api.setToken(token.authToken);
 	let success = await api.addReservation({
 		roomId,
 		time,
