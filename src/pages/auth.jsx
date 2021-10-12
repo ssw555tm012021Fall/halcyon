@@ -36,7 +36,7 @@ export function SignIn() {
 		<div className={styles['view']}>
 			<form onSubmit={onSubmit}>
 				<picture>
-					<img />
+					<img src="/images/logo.png"/>
 				</picture>
 				<section>
 					<input
