@@ -17,7 +17,7 @@ import Settings from './pages/settings';
 
 import { SignIn, SignUp } from './pages/auth';
 import { Api } from './services/Api';
-const host = 'http://localhost:3000/api';
+const host = 'https://halcyon-next.vercel.app/api';
 
 export class App extends Component {
 	state = {
@@ -25,9 +25,14 @@ export class App extends Component {
 	};
 
 	componentDidMount() {
-		const {api} = this.state;
+		const { api } = this.state;
 		if (localStorage.getItem('token')) {
-			api.setToken(localStorage.getItem('token'))
+			api.setToken(localStorage.getItem('token'));
+			this.getMe(api)
+				.then((me) => {
+					this.setState({ me });
+				})
+				.catch(console.error);
 		}
 	}
 
@@ -37,12 +42,17 @@ export class App extends Component {
 		}
 	};
 
+	getMe = async (api) => {
+		return await api.getMe();
+	};
+
 	render() {
-		const { api } = this.state;
+		const { api, me } = this.state;
 		return (
 			<AppContext.Provider
 				value={{
 					api,
+					me,
 					validateToken: this.validateToken,
 					isAuthenticated: localStorage.getItem('token'),
 				}}
