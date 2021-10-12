@@ -1,6 +1,6 @@
 const { Api } = require('../Api');
 jest.setTimeout(30000);
-const host = 'http://localhost:3000/api';
+const host = 'https://halcyon-next.vercel.app/api';
 const credentials = {
 	email: 'viyeta@gmail.com',
 	password: 'password',
