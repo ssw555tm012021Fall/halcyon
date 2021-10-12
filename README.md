@@ -1,5 +1,6 @@
 # Halcyon
 [![CI](https://github.com/ssw555tm012021Fall/halcyon/actions/workflows/main.yml/badge.svg)](https://github.com/ssw555tm012021Fall/halcyon/actions/workflows/main.yml)
+[![Build Status](https://app.travis-ci.com/ssw555tm012021Fall/halcyon.svg?branch=main)](https://app.travis-ci.com/ssw555tm012021Fall/halcyon)
 
 ## Description
 Project for class SSW - 555. The project Halcyon is a health application app that will enable employees to book meditation rooms and use in app features like meditation sounds and guided meditations.
@@ -27,6 +28,9 @@ and if you want to see the test coverage run
 ```
 yarn coverage
 ```
+
+## CI/CD
+We are using [Github Actions](https://github.com/actions) and [TravisCI](https://www.travis-ci.com/) for Continuous integrations and we are using [Vercel](https://vercel.com/) for hosting and Continuous Delivery
 
 ## Documentation
 We have written a backend specification for the api using the [OpenApi Specification](https://swagger.io/specification/) in the [OpenApi.yml](./OpenApi.yml) file.
