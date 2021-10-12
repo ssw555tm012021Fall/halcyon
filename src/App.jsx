@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import styles from './app.module.css';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Route,
+	Switch,
+	Redirect,
+} from 'react-router-dom';
 import { AppContext } from './services/AppContext';
 import ReloadPrompt from './ReloadPrompt';
 
@@ -11,15 +16,25 @@ import Meditations, { SelectedMeditation } from './pages/mediations';
 import Settings from './pages/settings';
 
 import { SignIn, SignUp } from './pages/auth';
-import Api from './services/Api';
-const host = 'http://4a90-108-46-139-211.ngrok.io';
+import { Api } from './services/Api';
+const host = 'https://halcyon-next.vercel.app/api';
 
 export class App extends Component {
 	state = {
 		api: new Api(host),
 	};
 
-	componentDidMount() {}
+	componentDidMount() {
+		const { api } = this.state;
+		if (localStorage.getItem('token')) {
+			api.setToken(localStorage.getItem('token'));
+			this.getMe(api)
+				.then((me) => {
+					this.setState({ me });
+				})
+				.catch(console.error);
+		}
+	}
 
 	validateToken = () => {
 		if (!localStorage.getItem('token')) {
@@ -27,14 +42,19 @@ export class App extends Component {
 		}
 	};
 
+	getMe = async (api) => {
+		return await api.getMe();
+	};
+
 	render() {
-		const { api } = this.state;
+		const { api, me } = this.state;
 		return (
 			<AppContext.Provider
 				value={{
 					api,
+					me,
 					validateToken: this.validateToken,
-					isAuthenticated: localStorage.getItem('token')
+					isAuthenticated: localStorage.getItem('token'),
 				}}
 			>
 				<main className={styles['app']}>

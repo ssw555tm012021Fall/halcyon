@@ -37,9 +37,9 @@ body {
 	grid-template-rows: 52px 1fr 52px;
 	gap: 0px 0px; 
 	grid-template-areas: 
-	  "."
-	  "."
-	  "."; 
+	  "header"
+	  "content"
+	  "navigation"; 
 }
 
 .view header {
@@ -48,4 +48,11 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	grid-area: header;
 }
+
+.view main {
+	grid-area: content;
+}
+
+.navigation { grid-area: navigation; }

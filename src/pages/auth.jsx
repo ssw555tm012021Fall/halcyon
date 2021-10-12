@@ -18,7 +18,8 @@ export function SignIn() {
 		try {
 			const token = await api.signIn({ email, password });
 			if (token) {
-				localStorage.setItem('token', token);
+				localStorage.setItem('token', token.authToken);
+				localStorage.setItem('expiredAt', token.expiredAt);
 				window.location = '/';
 			} else {
 				alert('Something happened please try again');
@@ -30,6 +31,7 @@ export function SignIn() {
 		}
 	};
 	const isValidEmail = validateEmail(email);
+	const hideSignUp = true;
 	return (
 		<div className={styles['view']}>
 			<form onSubmit={onSubmit}>
@@ -55,9 +57,9 @@ export function SignIn() {
 						type="password"
 						required
 					/>
-					<p>
+					{hideSignUp ? null : <p>
 						Need an account? <Link to={'/signup'}>Sign Up</Link>
-					</p>
+					</p>}
 				</section>
 				<section>
 					{isValidEmail && password.length && !isLoading ? (
