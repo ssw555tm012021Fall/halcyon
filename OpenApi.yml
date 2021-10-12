@@ -1,0 +1,388 @@
+openapi: 3.0.0
+info:
+  title: Halcyon
+  description: Api documentation for Halcyon
+  version: 0.2.1
+servers:
+  - url: https://halcyon-next.vercel.app/api
+    description: Stable development
+  - url: https://halcyon-next-develop.vercel.app/api
+    description: Nighlty development
+  - url: https://halcyon-ssw555.herokuapp.com/
+    description: Flask server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+  schemas:
+    error_missing_header:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+          title: 'Missing authorization header'
+    room:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        timeInterval:
+          type: number
+        startAvailableTime:
+          type: string 
+        endAvailableTime:
+          type: string 
+        availableTimes:
+          type: array
+          items: 
+            type: string
+    employee:
+      type: object
+      properties:
+        id:
+          type: string 
+        email:
+          type: string 
+        firstName:
+          type: string 
+        lastName:
+          type: string 
+        isConfirmed:
+          type: boolean
+        birthday:
+          type: string
+          format: date
+        gender:
+          type: string
+    reservation:
+      type: object
+      properties:
+        id:
+          type: string 
+        employeeId:
+          type: string 
+        date:
+          type: string 
+          format: string
+        startTime:
+          type: string 
+        endTime:
+          type: string
+        meditationRoomId:
+          type: string
+
+security:
+  - bearerAuth: [] 
+        
+paths:
+  /auth/login:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                password:
+                  type: string
+      summary: Authenticate user
+      responses:
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '200':
+          description: Success message
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  authToken:
+                    type: string
+                  expiredAt:
+                    type: string
+                  message:
+                    type: string
+                  status:
+                    type: string
+  /me:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Return employee information from jwt token
+      responses:
+        '401':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return employee information from jwt token
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  employee: 
+                    $ref: '#/components/schemas/employee'
+                      
+  /reservation:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Return employee reservation
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Returns a reservation
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  reservation:   
+                    $ref: '#/components/schemas/reservation'
+  /rooms:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Returns a list of rooms
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: A JSON array of rooms
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  rooms:   
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/room'
+  /rooms/{roomId}:
+    get:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: roomId
+          schema:
+            type: string
+          required: true
+          description: Numeric ID of the room
+      summary: Returns a list of available time in the break out room
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '404':
+          description: 'Room not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '200':    # status code
+          description: Get a room object
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  room:
+                    $ref: '#/components/schemas/room' 
+                      
+  /rooms/{roomId}/book:
+    post:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: roomId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                time: 
+                  type: string
+                  format: 'date-time'
+      summary: Book a specific room in a specific time
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '404':
+          description: 'Room not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '200':
+          description: Success message
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: string
+        '409':    
+          description: 'If there is a conflict booking the room'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+  /rooms/{roomId}/update:
+    post:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: roomId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                time: 
+                  type: string
+                  format: 'date-time'
+      summary: Book a specific room in a specific time
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '404':
+          description: 'Room not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '200':
+          description: Success message
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: string
+  /rooms/{roomId}/cancel:
+    post:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: roomId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the room
+      summary: Cancel a reservation
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '404':
+          description: 'Room not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '200':
+          description: Success message
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: string
