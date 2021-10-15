@@ -41,7 +41,7 @@ export class Api {
 			const { authToken, expiredAt } = data;
 			return {
 				authToken,
-				expiredAt
+				expiredAt,
 			};
 		} catch (e) {
 			if (e.response?.data?.message) {
@@ -71,14 +71,14 @@ export class Api {
 			throw new Error(e.message);
 		}
 	};
-
+	// Rooms
 	getRooms = async () => {
 		const url = `${this.host}/rooms`;
 		try {
 			const { data } = await axios.get(url, {
 				headers: {
 					authorization: `Bearer ${this.token}`,
-					'x-time-zone': this.timezone
+					'x-time-zone': this.timezone,
 				},
 			});
 
@@ -109,7 +109,7 @@ export class Api {
 			const { data } = await axios.get(url, {
 				headers: {
 					authorization: `Bearer ${this.token}`,
-					'x-time-zone': this.timezone
+					'x-time-zone': this.timezone,
 				},
 			});
 			const { room } = data;
@@ -129,25 +129,28 @@ export class Api {
 			throw new Error(e.message);
 		}
 	};
-
-	addReservation = async ({roomId, time}) => {
+	addReservation = async ({ roomId, time }) => {
 		const url = `${this.host}/rooms/${roomId}/book`;
 		const now = moment(new Date());
 		const timeMoment = moment(time, 'HH:mm');
-		if(!timeMoment.isAfter(now)) {
-			throw new Error(`That's not a valid time`)
+		if (!timeMoment.isAfter(now)) {
+			throw new Error(`That's not a valid time`);
 		}
-		
+
 		try {
-			const { data } = await axios.post(url, {
-				time,
-			}, {
-				headers: {
-					authorization: `Bearer ${this.token}`,
-					'x-time-zone': this.timezone
+			const { data } = await axios.post(
+				url,
+				{
+					time,
 				},
-			});
-			const {status} = data;
+				{
+					headers: {
+						authorization: `Bearer ${this.token}`,
+						'x-time-zone': this.timezone,
+					},
+				}
+			);
+			const { status } = data;
 			return status === 'success';
 		} catch (e) {
 			if (e.response?.data?.message) {
@@ -156,26 +159,29 @@ export class Api {
 
 			throw new Error(e.message);
 		}
-	}
-
-	updateReservation = async ({roomId, time}) => {
+	};
+	updateReservation = async ({ roomId, time }) => {
 		const url = `${this.host}/rooms/${roomId}/update`;
 		const now = moment(new Date());
 		const timeMoment = moment(time, 'HH:mm');
-		if(!timeMoment.isAfter(now)) {
-			throw new Error(`That's not a valid time`)
+		if (!timeMoment.isAfter(now)) {
+			throw new Error(`That's not a valid time`);
 		}
-		
+
 		try {
-			const { data } = await axios.post(url, {
-				time,
-			}, {
-				headers: {
-					authorization: `Bearer ${this.token}`,
-					'x-time-zone': this.timezone
+			const { data } = await axios.post(
+				url,
+				{
+					time,
 				},
-			});
-			const {status} = data;
+				{
+					headers: {
+						authorization: `Bearer ${this.token}`,
+						'x-time-zone': this.timezone,
+					},
+				}
+			);
+			const { status } = data;
 			return status === 'success';
 		} catch (e) {
 			if (e.response?.data?.message) {
@@ -184,22 +190,21 @@ export class Api {
 
 			throw new Error(e.message);
 		}
-	}
-
+	};
 	getReservation = async () => {
 		const url = `${this.host}/reservation`;
 		try {
 			const { data } = await axios.get(url, {
 				headers: {
 					authorization: `Bearer ${this.token}`,
-					'x-time-zone': this.timezone
+					'x-time-zone': this.timezone,
 				},
 			});
 			const { reservation } = data;
-			if(reservation) {
+			if (reservation) {
 				const now = moment(new Date());
 				const startMoment = moment(reservation.startTime, 'HH:mm');
-				if(now.isAfter(startMoment)) {
+				if (now.isAfter(startMoment)) {
 					return null;
 				}
 			}
@@ -211,19 +216,22 @@ export class Api {
 
 			throw new Error(e.message);
 		}
-	}
-
-	cancelReservation = async ({roomId}) => {
+	};
+	cancelReservation = async ({ roomId }) => {
 		const url = `${this.host}/rooms/${roomId}/cancel`;
-		
+
 		try {
-			const { data } = await axios.post(url, {}, {
-				headers: {
-					authorization: `Bearer ${this.token}`,
-					'x-time-zone': this.timezone
-				},
-			});
-			const {status} = data;
+			const { data } = await axios.post(
+				url,
+				{},
+				{
+					headers: {
+						authorization: `Bearer ${this.token}`,
+						'x-time-zone': this.timezone,
+					},
+				}
+			);
+			const { status } = data;
 			return status === 'success';
 		} catch (e) {
 			if (e.response?.data?.message) {
@@ -232,5 +240,64 @@ export class Api {
 
 			throw new Error(e.message);
 		}
-	}
+	};
+
+	// Sounds
+	getSounds = async () => {
+		const url = `${this.host}/sounds`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`,
+				},
+			});
+
+			return data?.sounds;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	};
+
+	getSoundsByType = async (type) => {
+		const url = `${this.host}/sounds`;
+		try {
+			const { data } = await axios.get(url, {
+				params: { type },
+				headers: {
+					authorization: `Bearer ${this.token}`,
+				},
+			});
+
+			return data?.sounds;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	};
+
+	getSound = async (id) => {
+		const url = `${this.host}/sounds/${id}`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`,
+				},
+			});
+
+			return data?.sound;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	};
 }
