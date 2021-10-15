@@ -299,5 +299,24 @@ export class Api {
 
 			throw new Error(e.message);
 		}
+	}
+
+	getReminders = async () => {
+		const url = `${this.host}/reminders`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`,
+				},
+			});
+
+			return data?.reminders;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
 	};
 }

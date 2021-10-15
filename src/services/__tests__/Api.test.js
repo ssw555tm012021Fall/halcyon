@@ -121,3 +121,16 @@ test('Should get sound by id', async () => {
 	expect(sound).toBeDefined();
 	expect(sound.id).toBe(id);
 });
+
+test('Should get employee reminders', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const reminders = await api.getReminders();
+	expect(reminders).toBeDefined();
+	expect(reminders.length).toBe(2);
+	const me = await api.getMe();
+	for(const reminder of reminders) {
+		expect(reminder.employeeId).toBe(me.id);
+	}
+});
