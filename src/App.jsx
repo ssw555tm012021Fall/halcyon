@@ -11,7 +11,7 @@ import ReloadPrompt from './ReloadPrompt';
 
 import Home from './pages/home';
 import Rooms, { SelectedRoom } from './pages/rooms';
-import Music, { SelectedSong } from './pages/music';
+import Sound, { SelectedSound } from './pages/sounds';
 import Meditations, { SelectedMeditation } from './pages/mediations';
 import Settings from './pages/settings';
 
@@ -66,11 +66,11 @@ export class App extends Component {
 								path="/rooms/:id"
 								component={SelectedRoom}
 							/>
-							<Route exact path="/music" component={Music} />
+							<Route exact path="/sounds" component={Sound} />
 							<Route
 								exact
-								path="/music/:id"
-								component={SelectedSong}
+								path="/sounds/:id"
+								component={SelectedSound}
 							/>
 							<Route
 								exact
