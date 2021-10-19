@@ -83,6 +83,8 @@ class Player extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (!prevProps.show && this.props.show) {
+			console.log(`Props`);
+			console.log(this.props);
 			this.onLoad();
 		}
 	}
