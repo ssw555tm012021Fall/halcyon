@@ -68,7 +68,7 @@ export default function Sounds() {
 }
 
 class Player extends Component {
-	timeInterval = 100;
+	timeInterval = 1000;
 
 	state = {
 		isStarted: false,
@@ -83,7 +83,6 @@ class Player extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (!prevProps.show && this.props.show) {
-			console.log(`SOUND`, this.props.sound);
 			this.onLoad();
 		}
 	}
@@ -169,12 +168,17 @@ class Player extends Component {
 			}
 			this.setState({ remainingTime });
 			if (remainingTime === 0) {
-				this.reset();
+				this.onFinish();
 			}
 		}, this.timeInterval);
 
 		this.setState({ interval });
 	};
+
+	onFinish = () => {
+		this.onClose();
+		alert('Meditation completed');
+	}
 
 	reset = () => {
 		const { interval, sound } = this.state;
@@ -216,7 +220,7 @@ class Player extends Component {
 			}
 			this.setState({ remainingTime });
 			if (remainingTime === 0) {
-				this.reset();
+				this.onFinish();
 			}
 		}, this.timeInterval);
 		this.setState({ interval, isPlaying: true });
