@@ -198,7 +198,7 @@ class Player extends Component {
 
 	onCancel = () => {
 		if (confirm('Are you sure you want to cancel the meditation?')) {
-			this.reset();
+			this.onClose();
 		}
 	};
 
