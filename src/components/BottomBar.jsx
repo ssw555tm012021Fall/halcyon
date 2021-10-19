@@ -9,7 +9,7 @@ export function BottomBar({ selected }) {
         <Link to={'/rooms'} className={selected === 'room' ? styles['selected'] : null}>
             <div className={styles['room']}></div>
         </Link>
-        <Link to={'/music'} className={selected === 'music' ? styles['selected'] : null}>
+        <Link to={'/sounds'} className={selected === 'music' ? styles['selected'] : null}>
             <div className={styles['music']}></div>
         </Link>
         <Link to={'/meditations'} className={selected === 'meditation' ? styles['selected'] : null}>
