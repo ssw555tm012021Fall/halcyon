@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { AppContext } from '../services/AppContext';
 import styles from './auth.module.css';

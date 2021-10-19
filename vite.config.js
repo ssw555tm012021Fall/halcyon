@@ -1,16 +1,28 @@
 import vite from 'vite';
 import reactRefresh from '@vitejs/plugin-react-refresh';
 import { VitePWA } from 'vite-plugin-pwa';
+import { viteCommonjs, esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
+import react from '@vitejs/plugin-react'
 
 const config = vite.defineConfig({
 	server: {
-		port: 5000
+		port: 5000,
 	},
 	build: {
 		sourcemap: process.env.SOURCE_MAP === 'true',
 	},
+	optimizeDeps: {
+		esbuildOptions: {
+			plugins: [esbuildCommonjs(['@fseehawer/react-circular-slider'])],
+		},
+	},
 	plugins: [
-		reactRefresh(),
+		react({
+			configFile: true,
+		}),
+		viteCommonjs({
+			include: ['@fseehawer/react-circular-slider']
+		}),
 		VitePWA({
 			mode: 'development',
 			srcDir: 'src',
@@ -42,7 +54,7 @@ const config = vite.defineConfig({
 			},
 			injectManifest: {
 				globDirectory: 'dist',
-        globPatterns: [
+				globPatterns: [
 					'**/*.{css, js, jpg, jpeg, svg, png, html, woff2, json}',
 				],
 			},

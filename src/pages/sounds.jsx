@@ -1,13 +1,11 @@
 import React, { useContext, Component, useState, useEffect } from 'react';
 import styles from './sounds.module.css';
 import { BottomBar } from '../components/BottomBar';
-import { Link } from 'react-router-dom';
-import { BigPlayer } from '../components/Player';
 import { AppContext } from '../services/AppContext';
 import { Redirect } from 'react-router';
+// TODO Fix broken dependency on build
 import CircularSlider from '@fseehawer/react-circular-slider';
 import { Howl } from 'howler';
-import { Api } from '../services/Api';
 
 export default function Sounds() {
 	const { isAuthenticated, api } = useContext(AppContext);
@@ -180,7 +178,7 @@ class Player extends Component {
 	onFinish = () => {
 		this.onClose();
 		alert('Meditation completed');
-	}
+	};
 
 	reset = () => {
 		const { interval, sound } = this.state;
@@ -277,6 +275,31 @@ class Player extends Component {
 			);
 		}
 
+		const component = sound ? (
+			<CircularSlider
+				label="minutes"
+				min={0}
+				max={60}
+				labelColor="#005a58"
+				knobColor="#094568"
+				knobDraggable={!isStarted}
+				progressColorFrom="#45C0E9"
+				progressColorTo="#0098BB"
+				progressSize={24}
+				trackColor="#eeeeee"
+				trackSize={24}
+				dataIndex={dataIndex}
+				data={times} //...
+				onChange={(value) => {
+					if (!isStarted) {
+						this.setState({
+							time: value,
+						});
+					}
+				}}
+			/>
+		) : null;
+
 		return (
 			<div className={classNames.join(' ')}>
 				<section className={styles['player']}>
@@ -295,28 +318,7 @@ class Player extends Component {
 							{sound ? (
 								<div>
 									{name ? <h2>{name}</h2> : null}
-									<CircularSlider
-										label="minutes"
-										min={0}
-										max={60}
-										labelColor="#005a58"
-										knobColor="#094568"
-										knobDraggable={!isStarted}
-										progressColorFrom="#45C0E9"
-										progressColorTo="#0098BB"
-										progressSize={24}
-										trackColor="#eeeeee"
-										trackSize={24}
-										dataIndex={dataIndex}
-										data={times} //...
-										onChange={(value) => {
-											if (!isStarted) {
-												this.setState({
-													time: value,
-												});
-											}
-										}}
-									/>
+									{component}
 									{description ? (
 										<small>{description}</small>
 									) : null}
