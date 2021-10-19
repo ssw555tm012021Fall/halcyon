@@ -14,10 +14,6 @@ export default function Sounds() {
 	const [sound, setSound] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 
-	if (!isAuthenticated) {
-		return <Redirect to="/signin" />;
-	}
-
 	useEffect(() => {
 		setIsLoading(true);
 		api.getSoundsByType('sound')
@@ -29,6 +25,10 @@ export default function Sounds() {
 				setIsLoading(false);
 			});
 	}, []);
+
+	if (!isAuthenticated) {
+		return <Redirect to="/signin" />;
+	}
 
 	const mapSound = (sound) => {
 		return (
@@ -197,6 +197,7 @@ class Player extends Component {
 	};
 
 	onCancel = () => {
+		// eslint-disable-next-line no-restricted-globals
 		if (confirm('Are you sure you want to cancel the meditation?')) {
 			this.onClose();
 		}

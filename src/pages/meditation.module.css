@@ -86,8 +86,8 @@
 	height: 24px;
 	mask-size: cover;
     background-color: #3d3dd3;
-	mask-image: url('/assets/icons/back.svg');
-	-webkit-mask-image: url('/assets/icons/back.svg');
+	mask-image: url('../assets/icons/back.svg');
+	-webkit-mask-image: url('../assets/icons/back.svg');
 }
 
 .selected-meditation header > :last-child {

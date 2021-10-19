@@ -74,8 +74,8 @@
 	height: 24px;
 	mask-size: cover;
     background-color: #3d3dd3;
-	mask-image: url('/assets/icons/back.svg');
-	-webkit-mask-image: url('/assets/icons/back.svg');
+	mask-image: url('../assets/icons/back.svg');
+	-webkit-mask-image: url('../assets/icons/back.svg');
 }
 
 .selected-song header > :last-child {
@@ -213,7 +213,7 @@
 	background-color: #959595;
     mask-position: center;
     transition: background-color ease-out 220ms;
-	mask-image: url('/assets/icons/x.svg');
-    mask-repeat: no-repeat;
-	-webkit-mask-image: url('/assets/icons/x.svg');
+	mask-repeat: no-repeat;
+    mask-image: url('../assets/icons/x.svg');
+	-webkit-mask-image: url('../assets/icons/x.svg');
 }

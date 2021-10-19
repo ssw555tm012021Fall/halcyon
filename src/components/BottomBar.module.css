@@ -28,51 +28,51 @@ a.selected div{
 }
 
 .home {
-	mask-image: url('/assets/icons/home.svg');
-	-webkit-mask-image: url('/assets/icons/home.svg');
+	mask-image: url('../assets/icons/home.svg');
+	-webkit-mask-image: url('../assets/icons/home.svg');
 }
 
 .selected .home {
-	mask-image: url('/assets/icons/home_selected.svg');
-	-webkit-mask-image: url('/assets/icons/home_selected.svg');
+	mask-image: url('../assets/icons/home_selected.svg');
+	-webkit-mask-image: url('../assets/icons/home_selected.svg');
 }
 
 .room {
-	mask-image: url('/assets/icons/breakout_room.svg');
-	-webkit-mask-image: url('/assets/icons/breakout_room.svg');
+	mask-image: url('../assets/icons/breakout_room.svg');
+	-webkit-mask-image: url('../assets/icons/breakout_room.svg');
 }
 
 .selected .room {
-	mask-image: url('/assets/icons/breakout_room_selected.svg');
-	-webkit-mask-image: url('/assets/icons/breakout_room_selected.svg');
+	mask-image: url('../assets/icons/breakout_room_selected.svg');
+	-webkit-mask-image: url('../assets/icons/breakout_room_selected.svg');
 }
 
 .music {
-	mask-image: url('/assets/icons/music.svg');
-	-webkit-mask-image: url('/assets/icons/music.svg');
+	mask-image: url('../assets/icons/music.svg');
+	-webkit-mask-image: url('../assets/icons/music.svg');
 }
 
 .selected .music {
-	mask-image: url('/assets/icons/music_selected.svg');
-	-webkit-mask-image: url('/assets/icons/music_selected.svg');
+	mask-image: url('../assets/icons/music_selected.svg');
+	-webkit-mask-image: url('../assets/icons/music_selected.svg');
 }
 
 .meditation {
-	mask-image: url('/assets/icons/meditation.svg');
-	-webkit-mask-image: url('/assets/icons/meditation.svg');
+	mask-image: url('../assets/icons/meditation.svg');
+	-webkit-mask-image: url('../assets/icons/meditation.svg');
 }
 
 .selected .meditation {
-	mask-image: url('/assets/icons/meditation_selected.svg');
-	-webkit-mask-image: url('/assets/icons/meditation_selected.svg');
+	mask-image: url('../assets/icons/meditation_selected.svg');
+	-webkit-mask-image: url('../assets/icons/meditation_selected.svg');
 }
 
 .settings {
-	mask-image: url('/assets/icons/settings.svg');
-	-webkit-mask-image: url('/assets/icons/settings.svg');
+	mask-image: url('../assets/icons/settings.svg');
+	-webkit-mask-image: url('../assets/icons/settings.svg');
 }
 
 .selected .settings {
-	mask-image: url('/assets/icons/settings_selected.svg');
-	-webkit-mask-image: url('/assets/icons/settings_selected.svg');
+	mask-image: url('../assets/icons/settings_selected.svg');
+	-webkit-mask-image: url('../assets/icons/settings_selected.svg');
 }

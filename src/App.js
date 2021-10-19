@@ -7,7 +7,6 @@ import {
 	Redirect,
 } from 'react-router-dom';
 import { AppContext } from './services/AppContext';
-import ReloadPrompt from './ReloadPrompt';
 
 import Home from './pages/home';
 import Rooms, { SelectedRoom } from './pages/rooms';
@@ -89,7 +88,6 @@ export class App extends Component {
 						</Switch>
 					</Router>
 				</main>
-				<ReloadPrompt />
 			</AppContext.Provider>
 		);
 	}
