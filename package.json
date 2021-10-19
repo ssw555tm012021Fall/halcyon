@@ -6,7 +6,9 @@
 	"author": "Jose J. Cruz <jjzcru@gmail.com>",
 	"license": "MIT",
 	"dependencies": {
+		"@fseehawer/react-circular-slider": "^2.3.5",
 		"axios": "^0.22.0",
+		"howler": "^2.2.3",
 		"moment": "^2.29.1",
 		"prop-types": "^15.7.2",
 		"react": "^17.0.2",

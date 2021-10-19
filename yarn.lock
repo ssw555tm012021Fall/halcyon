@@ -1043,6 +1043,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fseehawer/react-circular-slider@^2.3.5":
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/@fseehawer/react-circular-slider/-/react-circular-slider-2.3.5.tgz#7ffde17f4b422605dfba0eb7b2d23e0deb4edfd3"
+  integrity sha512-9Yf+Bj844ggAAMehPFP3Dmd+MByE0CFk4abkirbcLIQGK0ds+cidfA6uGCbkInlcCy62cTVjO/0GtX0HDzrM7Q==
+
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.5.0.tgz#1407967d4c6eecd7388f83acf1eaf4d0c6e58ef9"
@@ -2787,6 +2792,11 @@ hoist-non-react-statics@^3.1.0:
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
   dependencies:
     react-is "^16.7.0"
+
+howler@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/howler/-/howler-2.2.3.tgz#a2eff9b08b586798e7a2ee17a602a90df28715da"
+  integrity sha512-QM0FFkw0LRX1PR8pNzJVAY25JhIWvbKMBFM4gqk+QdV+kPXOhleWGCB6AiAF/goGjIHK2e/nIElplvjQwhr0jg==
 
 html-encoding-sniffer@^2.0.1:
   version "2.0.1"
