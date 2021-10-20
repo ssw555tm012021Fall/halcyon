@@ -3,7 +3,6 @@ import styles from './sounds.module.css';
 import { BottomBar } from '../components/BottomBar';
 import { AppContext } from '../services/AppContext';
 import { Redirect } from 'react-router';
-// TODO Fix broken dependency on build
 import CircularSlider from '@fseehawer/react-circular-slider';
 import { Howl } from 'howler';
 

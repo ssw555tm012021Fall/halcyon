@@ -11,7 +11,7 @@ import { AppContext } from './services/AppContext';
 import Home from './pages/home';
 import Rooms, { SelectedRoom } from './pages/rooms';
 import Sound from './pages/sounds';
-import Meditations, { SelectedMeditation } from './pages/mediations';
+import Meditations from './pages/mediations';
 import Settings from './pages/settings';
 
 import { SignIn, SignUp } from './pages/auth';
@@ -70,11 +70,6 @@ export class App extends Component {
 								exact
 								path="/meditations"
 								component={Meditations}
-							/>
-							<Route
-								exact
-								path="/meditations/:id"
-								component={SelectedMeditation}
 							/>
 							<Route
 								exact
