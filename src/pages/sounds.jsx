@@ -3,7 +3,6 @@ import styles from './sounds.module.css';
 import { BottomBar } from '../components/BottomBar';
 import { AppContext } from '../services/AppContext';
 import { Redirect } from 'react-router';
-// TODO Fix broken dependency on build
 import CircularSlider from '@fseehawer/react-circular-slider';
 import { Howl } from 'howler';
 
@@ -61,6 +60,26 @@ export default function Sounds() {
 					setIsPlayerDisplayed(false);
 				}}
 			/>
+		</div>
+	);
+}
+
+function Sound({ id, name, description, url, credit, length, onClick }) {
+	return (
+		<div
+			className={styles['sound']}
+			onClick={() => {
+				onClick({
+					id,
+					name,
+					description,
+					url,
+					credit,
+					length,
+				});
+			}}
+		>
+			<div id={id}>{name}</div>
 		</div>
 	);
 }
@@ -334,22 +353,4 @@ class Player extends Component {
 	}
 }
 
-function Sound({ id, name, description, url, credit, length, onClick }) {
-	return (
-		<div
-			className={styles['sound']}
-			onClick={() => {
-				onClick({
-					id,
-					name,
-					description,
-					url,
-					credit,
-					length,
-				});
-			}}
-		>
-			<div id={id}>{name}</div>
-		</div>
-	);
-}
+

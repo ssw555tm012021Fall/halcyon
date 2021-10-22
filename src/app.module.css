@@ -4,6 +4,6 @@
     overflow: hidden;
 }
 
-.app article button {
-    /*display: none;*/
+.app button {
+    cursor: pointer;
 }
