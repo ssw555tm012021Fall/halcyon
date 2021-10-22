@@ -64,6 +64,26 @@ export default function Sounds() {
 	);
 }
 
+function Sound({ id, name, description, url, credit, length, onClick }) {
+	return (
+		<div
+			className={styles['sound']}
+			onClick={() => {
+				onClick({
+					id,
+					name,
+					description,
+					url,
+					credit,
+					length,
+				});
+			}}
+		>
+			<div id={id}>{name}</div>
+		</div>
+	);
+}
+
 class Player extends Component {
 	timeInterval = 1000;
 
@@ -333,22 +353,4 @@ class Player extends Component {
 	}
 }
 
-function Sound({ id, name, description, url, credit, length, onClick }) {
-	return (
-		<div
-			className={styles['sound']}
-			onClick={() => {
-				onClick({
-					id,
-					name,
-					description,
-					url,
-					credit,
-					length,
-				});
-			}}
-		>
-			<div id={id}>{name}</div>
-		</div>
-	);
-}
+
