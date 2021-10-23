@@ -108,6 +108,24 @@ components:
         type:
           type: string
           enum: [water, break]
+    event:
+      type: object
+      properties:
+        id:
+          type: string 
+        employeeId:
+          type: string 
+        state:
+          type: string
+          enum: [completed, cancel]
+        category:
+          type: string 
+          enum: [guided_meditation, meditation, water, break]
+        length:
+          type: number
+        createdAt:
+          type: string 
+          format: 'date-time'
 
 security:
   - bearerAuth: [] 
@@ -513,4 +531,43 @@ paths:
                     type: array
                     items: 
                       $ref: '#/components/schemas/reminder'
+  /events:
+    post:
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state:
+                  type: string
+                  enum: [completed, cancel]
+                category:
+                  type: string 
+                  enum: [guided_meditation, meditation, water, break]
+                length:
+                  type: number
+      summary: Send employee event
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: An event response
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  event:   
+                    $ref: '#/components/schemas/event'
+                      
   
