@@ -47,9 +47,13 @@ export default function Settings() {
 }
 
 function NotificationOption() {
+	const {isNotificationSupported} = useContext(AppContext);
 	const [isChecked, setIsChecked] = useState(
-		Notification?.permission === 'granted'
+		isNotificationSupported && Notification?.permission === 'granted'
 	);
+	if(!isNotificationSupported) {
+		return null;
+	}
 	const onToggle = (e) => {
 		const value = e.target.checked;
 		if (value) {
@@ -68,6 +72,7 @@ function NotificationOption() {
 			}
 		}
 	};
+	
 	return (
 		<div className={styles['options']}>
 			<div className={styles['option']}>
