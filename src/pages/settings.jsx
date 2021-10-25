@@ -3,7 +3,6 @@ import styles from './settings.module.css';
 import { BottomBar } from '../components/BottomBar';
 import { AppContext } from '../services/AppContext';
 import { Redirect } from 'react-router';
-import moment from 'moment';
 
 export default function Settings() {
 	const { isAuthenticated } = useContext(AppContext);
@@ -73,7 +72,7 @@ function NotificationOption() {
 		<div className={styles['options']}>
 			<div className={styles['option']}>
 				<div>
-					<span>Notifications </span>
+					<span>System Notifications</span>
 					<Toggle on={isChecked} onToggle={onToggle} />
 				</div>
 			</div>
@@ -135,7 +134,7 @@ function Dialog({ show, type, onClose }) {
 }
 
 function WaterDialog({ show, onClose }) {
-	const { cancelReminders, createReminders } = useContext(AppContext);
+	const { cancelReminders, createReminders, api } = useContext(AppContext);
 	const classNames = [styles['dialog-container']];
 	const [reminder, setReminder] = useState(
 		JSON.parse(localStorage.getItem(`reminder-water`))
@@ -149,6 +148,15 @@ function WaterDialog({ show, onClose }) {
 		classNames.push(styles['show']);
 	}
 
+	useEffect(()=> {
+		const r = JSON.parse(localStorage.getItem(`reminder-water`));
+		setIsEnabled(r.enabled);
+		setStart(r.start);
+		setEnd(r.end);
+		setInterval(r.interval);
+		setReminder(r);
+	}, [show])
+
 	if (!reminder) {
 		return null;
 	}
@@ -157,18 +165,31 @@ function WaterDialog({ show, onClose }) {
 		e.preventDefault();
 		reminder.interval = parseInt(`${reminder.interval}`);
 		const { start, end, interval } = reminder;
-		localStorage.setItem(`reminder-water`, JSON.stringify(reminder));
-		if (reminder.enabled) {
-			createReminders({
-				type: 'water',
-				start,
-				end,
-				interval,
-			});
-		} else {
-			cancelReminders('water');
-		}
-		onClose();
+		api.updateReminder({
+			type: 'water',
+			interval,
+			startAt: start,
+			endAt: end,
+		})
+			.then(() => {
+				localStorage.setItem(
+					`reminder-water`,
+					JSON.stringify(reminder)
+				);
+
+				if (reminder.enabled) {
+					createReminders({
+						type: 'water',
+						start,
+						end,
+						interval,
+					});
+				} else {
+					cancelReminders('water');
+				}
+				onClose();
+			})
+			.catch((e) => alert(e.message));
 	};
 
 	return (
@@ -178,6 +199,7 @@ function WaterDialog({ show, onClose }) {
 					<nav>
 						<div>
 							<button
+								type={'button'}
 								className={styles['close']}
 								onClick={onClose}
 							>
@@ -289,7 +311,7 @@ function WaterDialog({ show, onClose }) {
 						</div>
 					</main>
 					<footer>
-						<button>Save</button>
+						<button type={'submit'}>Save</button>
 					</footer>
 				</form>
 			</section>
@@ -298,7 +320,7 @@ function WaterDialog({ show, onClose }) {
 }
 
 function BreakDialog({ show, onClose }) {
-	const { cancelReminders, createReminders } = useContext(AppContext);
+	const { cancelReminders, createReminders, api } = useContext(AppContext);
 	const classNames = [styles['dialog-container']];
 	const [reminder, setReminder] = useState(
 		JSON.parse(localStorage.getItem(`reminder-break`))
@@ -312,6 +334,15 @@ function BreakDialog({ show, onClose }) {
 	if (show) {
 		classNames.push(styles['show']);
 	}
+	useEffect(()=> {
+		const r = JSON.parse(localStorage.getItem(`reminder-break`));
+		setIsEnabled(r.enabled);
+		setStart(r.start);
+		setEnd(r.end);
+		setInterval(r.interval);
+		setReminder(r);
+	}, [show])
+
 	if (!reminder) {
 		return null;
 	}
@@ -320,18 +351,30 @@ function BreakDialog({ show, onClose }) {
 		e.preventDefault();
 		reminder.interval = parseInt(`${reminder.interval}`);
 		const { start, end, interval } = reminder;
-		localStorage.setItem(`reminder-break`, JSON.stringify(reminder));
-		if (reminder.enabled) {
-			createReminders({
-				type: 'break',
-				start,
-				end,
-				interval,
-			});
-		} else {
-			cancelReminders('break');
-		}
-		onClose();
+		api.updateReminder({
+			type: 'break',
+			interval,
+			startAt: start,
+			endAt: end,
+		})
+			.then((r) => {
+				localStorage.setItem(
+					`reminder-break`,
+					JSON.stringify(reminder)
+				);
+				if (reminder.enabled) {
+					createReminders({
+						type: 'break',
+						start,
+						end,
+						interval,
+					});
+				} else {
+					cancelReminders('break');
+				}
+				onClose();
+			})
+			.catch((e) => alert(e.message));
 	};
 	return (
 		<div className={classNames.join(' ')}>
@@ -340,6 +383,7 @@ function BreakDialog({ show, onClose }) {
 					<nav>
 						<div>
 							<button
+								type={'button'}
 								className={styles['close']}
 								onClick={onClose}
 							>
@@ -451,7 +495,7 @@ function BreakDialog({ show, onClose }) {
 						</div>
 					</main>
 					<footer>
-						<button>Save</button>
+						<button type={'submit'}>Save</button>
 					</footer>
 				</form>
 			</section>

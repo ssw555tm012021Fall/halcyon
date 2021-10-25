@@ -144,7 +144,7 @@ test.skip('Should update an employee reminder', async () => {
 		interval: 1,
 		startAt: "09:00",
 		endAt: "09:15"
-	}
+	};
 	const me = await api.getMe();
 	const reminder = await api.updateReminder(data);
 	expect(reminder).toBeDefined();

@@ -136,7 +136,7 @@ export class App extends Component {
 				let body =
 					type === 'water'
 						? 'Did you drink water?'
-						: 'Did you take a preak?';
+						: 'Did you take a break?';
 				const category = type;
 				if (
 					isNotificationSupported &&
