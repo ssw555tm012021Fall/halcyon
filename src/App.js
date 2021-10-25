@@ -23,6 +23,11 @@ export class App extends Component {
 	state = {
 		api: new Api(host),
 		reminders: [],
+		isNotificationSupported: !!(
+			window.Notification ||
+			window.webkitNotifications ||
+			navigator.mozNotification
+		)
 	};
 
 	componentDidMount() {
@@ -104,14 +109,8 @@ export class App extends Component {
 	};
 
 	createReminders = async ({ type, start, end, interval }) => {
-		let { reminders, api } = this.state;
+		let { reminders, api, isNotificationSupported } = this.state;
 		reminders = this.cancelReminders(type);
-		
-		const isNotificationSupported = !!(
-			window.Notification ||
-			window.webkitNotifications ||
-			navigator.mozNotification
-		);
 		const now = moment().format('HH:mm');
 		const startTimeMoment = moment(now, 'HH:mm');
 		let times = this.getTimeInRage(start, end, interval);
@@ -235,12 +234,13 @@ export class App extends Component {
 	};
 
 	render() {
-		const { api, me } = this.state;
+		const { api, me, isNotificationSupported } = this.state;
 		return (
 			<AppContext.Provider
 				value={{
 					api,
 					me,
+					isNotificationSupported,
 					validateToken: this.validateToken,
 					isAuthenticated: localStorage.getItem('token'),
 					createReminders: this.createReminders,
@@ -277,21 +277,4 @@ export class App extends Component {
 			</AppContext.Provider>
 		);
 	}
-}
-
-function uniqueArticles(articles) {
-	const articleMap = {};
-	let articleOrder = [];
-	const response = [];
-	for (let article of articles) {
-		articleMap[`${article.id}`] = article;
-		articleOrder.push(article.id);
-	}
-
-	articleOrder = [...new Set(articleOrder)];
-	for (let id of articleOrder) {
-		response.push(articleMap[id]);
-	}
-
-	return response.filter((r) => !!r);
 }
