@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Halcyon
   description: Api documentation for Halcyon
-  version: 1.3.0
+  version: 1.3.4
 servers:
   - url: https://halcyon-next.vercel.app/api
     description: Stable development
