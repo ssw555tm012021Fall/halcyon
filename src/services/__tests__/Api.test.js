@@ -134,3 +134,23 @@ test('Should get employee reminders', async () => {
 		expect(reminder.employeeId).toBe(me.id);
 	}
 });
+
+test.skip('Should update an employee reminder', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const data = {
+		type: "water",
+		interval: 1,
+		startAt: "09:00",
+		endAt: "09:15"
+	}
+	const me = await api.getMe();
+	const reminder = await api.updateReminder(data);
+	expect(reminder).toBeDefined();
+	expect(reminder.employeeId).toBe(me.id);
+	expect(reminder.type).toBe(data.type);
+	expect(reminder.interval).toBe(data.interval);
+	expect(reminder.startAt).toBe(data.startAt);
+	expect(reminder.endAt).toBe(data.endAt);
+});

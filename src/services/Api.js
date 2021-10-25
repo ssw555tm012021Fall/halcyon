@@ -299,7 +299,7 @@ export class Api {
 
 			throw new Error(e.message);
 		}
-	}
+	};
 
 	getReminders = async () => {
 		const url = `${this.host}/reminders`;
@@ -319,4 +319,57 @@ export class Api {
 			throw new Error(e.message);
 		}
 	};
+
+	updateReminder = async ({type, interval, startAt, endAt}) => {
+		const url = `${this.host}/reminders`;
+		const body = {
+			type,
+			interval,
+			startAt,
+			endAt
+		};
+		try {
+			const { data } = await axios.put(url, body, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { reminder } = data;
+			return reminder;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	sendEvent = async ({ state, category }) => {
+		console.log(`I send the event`, { state, category });
+		/*const url = `${this.host}/events`;
+
+		const body = {
+			state,
+			category,
+		};
+
+		try {
+			const { data } = await axios.post(url, body, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { status } = data;
+			return status === 'success';
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}*/
+	};
+
+
 }

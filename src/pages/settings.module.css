@@ -126,3 +126,110 @@ input:checked + .slider:before {
 .logout:focus, .logout:hover {
     border: 1px solid rgb(255, 69, 58);
 }
+
+
+/*DIALOG*/
+
+.dialog-container {
+    z-index: 100;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0, 0.5);
+    transform: translateY(100%);
+    transition: transform ease-out 200ms;
+}
+
+.dialog-container.show {
+    transform: translateY(0%);
+}
+
+.dialog {
+    position: fixed;
+    width: 100%;
+    height: 98%;
+    background: #fff;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    bottom: 0;
+}
+
+.dialog > * {
+    width: 100%;
+    height: 100%;
+}
+
+.dialog nav {
+    width: 100%;
+	display: flex;
+	justify-content: space-between;
+    height: 50px;
+}
+
+.dialog nav > :last-child {
+	width: 50px;
+}
+
+.dialog nav .title {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+.dialog main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: calc(100% - 150px); 
+}
+
+
+.dialog footer {
+    border-top: 1px solid #eaeaea;
+    width: 100%;
+    height: 100px;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.dialog footer button {
+	width: 200px;
+    cursor: pointer;
+    border: 1px solid #45C0E9;
+	border-radius: 4px;
+	height: 52px;
+	color: #fff;
+	font-size: 1rem;
+	font-weight: bold;
+	background: #45C0E9;
+	transition: opacity ease-out 220ms;
+}
+
+.dialog .close {
+    margin-top: 16px;
+    margin-left: 16px;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    outline: none;
+    border: none;
+    padding: 0;
+}
+
+.dialog .close > div {
+    width: 24px;
+    height: 24px;
+    mask-size: cover;
+	background-color: #959595;
+    mask-position: center;
+    transition: background-color ease-out 220ms;
+	mask-repeat: no-repeat;
+    mask-image: url('../assets/icons/x.svg');
+	-webkit-mask-image: url('../assets/icons/x.svg');
+}
