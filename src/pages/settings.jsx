@@ -96,7 +96,9 @@ function NoticationDetails({ setDialogType }) {
 			>
 				<div>
 					<span>Water </span>
-					<span>details</span>
+					<div>
+						<div className={styles['chevron-right']}></div>
+					</div>
 				</div>
 			</div>
 			<div
@@ -107,7 +109,9 @@ function NoticationDetails({ setDialogType }) {
 			>
 				<div>
 					<span>Break </span>
-					<span>details</span>
+					<div>
+						<div className={styles['chevron-right']}></div>
+					</div>
 				</div>
 			</div>
 		</div>

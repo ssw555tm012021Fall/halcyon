@@ -28,9 +28,19 @@
     border-bottom: 1px solid #c4c4c4;
 }
 
+.options .chevron-right {
+	width: 24px;
+	height: 24px;
+	mask-size: cover;
+	background-color: #959595;
+	mask-image: url('../assets/icons/chevron-right.svg');
+	-webkit-mask-image: url('../assets/icons/chevron-right.svg');
+}
+
 .option {
 	width: 100%;
 	height: 52px;
+	cursor: pointer;
 }
 
 .option > div {
