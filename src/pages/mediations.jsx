@@ -351,6 +351,5 @@ function secondsToTime(e) {
 			.toString()
 			.padStart(2, '0');
 
-	return m + ':' + s;
-	//return `${h}:${m}:${s}`;
+	return m + ':' + s;355
 }

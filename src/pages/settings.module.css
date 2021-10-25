@@ -1,0 +1,245 @@
+/* The switch - the box around the slider */
+.settings {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	padding-top: 20px;
+}
+
+.settings > div {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.options {
+    width: 90%;
+    min-height: 52px;
+    border: 1px solid #c4c4c4;
+	border-radius: 12px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.options > :not(:last-child) {
+    border-bottom: 1px solid #c4c4c4;
+}
+
+.options .chevron-right {
+	width: 24px;
+	height: 24px;
+	mask-size: cover;
+	background-color: #959595;
+	mask-image: url('../assets/icons/chevron-right.svg');
+	-webkit-mask-image: url('../assets/icons/chevron-right.svg');
+}
+
+.option {
+	width: 100%;
+	height: 52px;
+	cursor: pointer;
+}
+
+.option > div {
+	height: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+	overflow: hidden;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+/* The slider */
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: 0.4s;
+	transition: 0.4s;
+	overflow: hidden;
+}
+
+.slider:before {
+	position: absolute;
+	content: '';
+	height: 26px;
+	width: 26px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: 0.4s;
+	transition: 0.4s;
+}
+
+input:checked + .slider {
+	background-color: #45c0e9;
+}
+
+input:focus + .slider {
+	box-shadow: 0 0 1px #45c0e9;
+}
+
+input:checked + .slider:before {
+	-webkit-transform: translateX(26px);
+	-ms-transform: translateX(26px);
+	transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+	border-radius: 34px;
+}
+
+.slider.round:before {
+	border-radius: 50%;
+}
+
+.logout {
+	margin-top: auto;
+	width: 90%;
+	height: 52px;
+
+	border: 1px solid #c4c4c4;
+	background: none;
+	color: rgb(255, 69, 58);
+	border-radius: 12px;
+	margin-left: auto;
+	font-size: 1rem;
+	font-weight: bold;
+	margin-right: auto;
+	margin-bottom: 52px;
+    transition: border ease-out 220ms;
+}
+
+.logout:focus, .logout:hover {
+    border: 1px solid rgb(255, 69, 58);
+}
+
+
+/*DIALOG*/
+
+.dialog-container {
+    z-index: 100;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0, 0.5);
+    transform: translateY(100%);
+    transition: transform ease-out 200ms;
+}
+
+.dialog-container.show {
+    transform: translateY(0%);
+}
+
+.dialog {
+    position: fixed;
+    width: 100%;
+    height: 98%;
+    background: #fff;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    bottom: 0;
+}
+
+.dialog > * {
+    width: 100%;
+    height: 100%;
+}
+
+.dialog nav {
+    width: 100%;
+	display: flex;
+	justify-content: space-between;
+    height: 50px;
+}
+
+.dialog nav > :last-child {
+	width: 50px;
+}
+
+.dialog nav .title {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+.dialog main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: calc(100% - 150px); 
+}
+
+
+.dialog footer {
+    border-top: 1px solid #eaeaea;
+    width: 100%;
+    height: 100px;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.dialog footer button {
+	width: 200px;
+    cursor: pointer;
+    border: 1px solid #45C0E9;
+	border-radius: 4px;
+	height: 52px;
+	color: #fff;
+	font-size: 1rem;
+	font-weight: bold;
+	background: #45C0E9;
+	transition: opacity ease-out 220ms;
+}
+
+.dialog .close {
+    margin-top: 16px;
+    margin-left: 16px;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    outline: none;
+    border: none;
+    padding: 0;
+}
+
+.dialog .close > div {
+    width: 24px;
+    height: 24px;
+    mask-size: cover;
+	background-color: #959595;
+    mask-position: center;
+    transition: background-color ease-out 220ms;
+	mask-repeat: no-repeat;
+    mask-image: url('../assets/icons/x.svg');
+	-webkit-mask-image: url('../assets/icons/x.svg');
+}
