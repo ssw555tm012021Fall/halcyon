@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import styles from './rooms.module.css';
@@ -10,9 +11,6 @@ export default function Rooms() {
 	const [rooms, setRooms] = useState([]);
 	const [reservation, setReservation] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
-	if (!isAuthenticated) {
-		return <Redirect to="/signin" />;
-	}
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -31,6 +29,11 @@ export default function Rooms() {
 				setIsLoading(false);
 			});
 	}, []);
+
+	if (!isAuthenticated) {
+		return <Redirect to="/signin" />;
+	}
+
 
 	const classes = ['view', styles['rooms']];
 	let component = <Loading />;
@@ -106,9 +109,7 @@ function Room({
 export function SelectedRoom() {
 	const { id } = useParams();
 	const { isAuthenticated, api } = useContext(AppContext);
-	if (!isAuthenticated) {
-		return <Redirect to="/signin" />;
-	}
+	
 	const [room, setRoom] = useState(null);
 	useEffect(() => {
 		api.getRoom(id)
@@ -117,6 +118,10 @@ export function SelectedRoom() {
 			})
 			.catch(console.error);
 	}, []);
+
+	if (!isAuthenticated) {
+		return <Redirect to="/signin" />;
+	}
 
 	if (!room) {
 		return null;

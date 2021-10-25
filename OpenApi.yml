@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Halcyon
   description: Api documentation for Halcyon
-  version: 0.2.1
+  version: 1.3.0
 servers:
   - url: https://halcyon-next.vercel.app/api
     description: Stable development
@@ -78,6 +78,56 @@ components:
           type: string
         meditationRoomId:
           type: string
+    sound:
+      type: object
+      properties:
+        id:
+          type: string 
+        description:
+          type: string 
+        length:
+          type: number
+        credit:
+          type: string 
+        url:
+          type: string
+        type:
+          type: string
+          enum: [song, sound, guide]
+    reminder:
+      type: object
+      properties:
+        id:
+          type: string 
+        employeeId:
+          type: string 
+        startAt:
+          type: string
+        endAt:
+          type: string 
+        interval:
+          type: number
+        type:
+          type: string
+          enum: [water, break]
+    event:
+      type: object
+      properties:
+        id:
+          type: string 
+        employeeId:
+          type: string 
+        state:
+          type: string
+          enum: [completed, cancel]
+        category:
+          type: string 
+          enum: [guided_meditation, meditation, water, break]
+        length:
+          type: number
+        createdAt:
+          type: string 
+          format: 'date-time'
 
 security:
   - bearerAuth: [] 
@@ -236,8 +286,7 @@ paths:
                   status:
                     type: string
                   room:
-                    $ref: '#/components/schemas/room' 
-                      
+                    $ref: '#/components/schemas/room'                     
   /rooms/{roomId}/book:
     post:
       security:
@@ -386,3 +435,181 @@ paths:
                 properties:
                   success:
                     type: string
+  /sounds:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Returns a list of sounds
+      parameters:
+        - in: query
+          name: type
+          description: Adds a filter to the types of sound
+          schema:
+            type: string
+            enum: [song, sound, guide]
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: A JSON array of sounds
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  sounds:   
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/sound'
+  /sounds/{soundId}:
+    get:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: soundId
+          schema:
+            type: integer
+          required: true
+          description: Id of the sound
+      summary: Return a sound by it's id
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '404':
+          description: 'Sound not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '200':
+          description: Success message
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: string
+                  sound:
+                    $ref: '#/components/schemas/sound'
+  /reminders:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Returns a list of reminders for the employee
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: A JSON array of sounds
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  reminders:   
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/reminder'
+    put:
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [water, break]
+                interval:
+                  type: number
+                startAt:
+                  type: string
+                endAt:
+                  type: string
+      summary: Update the value of the reminder for the employee
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return the updated reminder
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  reminder:   
+                    type: object
+                    $ref: '#/components/schemas/reminder'
+  
+  /events:
+    post:
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state:
+                  type: string
+                  enum: [completed, cancel]
+                category:
+                  type: string 
+                  enum: [guided_meditation, meditation, water, break]
+                length:
+                  type: number
+      summary: Send employee event
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: An event response
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  event:   
+                    $ref: '#/components/schemas/event'
+                      
+  
