@@ -7,3 +7,75 @@
 .app button {
     cursor: pointer;
 }
+
+
+.notification-container {
+    z-index: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0, 0.5);
+    transform: translateY(100%);
+    transition: transform ease-out 200ms;
+}
+
+.notification-container.show {
+    transform: translateY(-100%);
+}
+
+.notification {
+    width: 400px;
+    height: 200px;
+    background: #fff;
+    border-radius: 8px;   
+    display: flex;
+    flex-direction: column;
+}
+
+.notification > div {
+    height: calc(100% - 52px);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.notification section {
+    height: 64px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.notification button {
+    cursor: pointer;
+    width: 40%;
+    height: 32px;
+    border: none;
+    
+    background: none;
+    border-radius: 4px;
+    font-weight: bold;
+    border: 1px solid transparent;
+    transition: border ease-out 220ms;
+}
+
+.notification section > :first-child {
+    color: rgb(255, 69, 58);
+}
+
+.notification section > :first-child:hover {
+    border: 1px solid rgb(255, 69, 58);
+}
+
+.notification section > :last-child {
+    color: #45c0e9;
+}
+
+.notification section > :last-child:hover {
+    border: 1px solid #45c0e9;
+}
