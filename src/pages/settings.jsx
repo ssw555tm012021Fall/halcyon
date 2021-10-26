@@ -54,6 +54,9 @@ function NotificationOption() {
 	if(!isNotificationSupported) {
 		return null;
 	}
+	if(isNotificationSupported && Notification?.permission === 'denied') {
+		return null 
+	}
 	const onToggle = (e) => {
 		const value = e.target.checked;
 		if (value) {
