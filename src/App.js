@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import moment from 'moment';
 import styles from './app.module.css';
 import {
@@ -27,7 +27,8 @@ export class App extends Component {
 			window.Notification ||
 			window.webkitNotifications ||
 			navigator.mozNotification
-		)
+		),
+		notification: null,
 	};
 
 	componentDidMount() {
@@ -61,7 +62,7 @@ export class App extends Component {
 			localStorage.setItem(
 				'reminder-water',
 				JSON.stringify({
-					enabled: true,
+					enabled: false,
 				})
 			);
 		}
@@ -69,7 +70,7 @@ export class App extends Component {
 			localStorage.setItem(
 				'reminder-break',
 				JSON.stringify({
-					enabled: true,
+					enabled: false,
 				})
 			);
 		}
@@ -108,22 +109,50 @@ export class App extends Component {
 		}
 	};
 
+	onCancelNotification = (category) => {
+		const { api } = this.state;
+		api.sendEvent({
+			state: 'cancel',
+			category,
+		})
+			.then(() => {
+				console.log(`Cancel the event of type: ${category}`);
+			})
+			.catch(console.error)
+			.finally(() => {
+				this.setState({ notification: null });
+			});
+	};
+
+	onCompleteNotification = (category) => {
+		const { api } = this.state;
+		api.sendEvent({
+			state: 'completed',
+			category,
+		})
+			.then(() => {
+				console.log(`Complete the event of type: ${category}`);
+			})
+			.catch(console.error)
+			.finally(() => {
+				this.setState({ notification: null });
+			});
+	};
+
 	createReminders = async ({ type, start, end, interval }) => {
-		let { reminders, api, isNotificationSupported } = this.state;
+		let { reminders, isNotificationSupported } = this.state;
 		reminders = this.cancelReminders(type);
 		const now = moment().format('HH:mm');
 		const startTimeMoment = moment(now, 'HH:mm');
 		let times = this.getTimeInRage(start, end, interval);
-		times = times.filter(
-			(time) => {
-				return moment(time, 'HH:mm').isAfter(
-					moment(now, 'HH:mm'),
-					'minute'
-				);
-			}
-		);
+		times = times.filter((time) => {
+			return moment(time, 'HH:mm').isAfter(
+				moment(now, 'HH:mm'),
+				'minute'
+			);
+		});
 
-		if(!times.length) {
+		if (!times.length) {
 			return;
 		}
 
@@ -141,54 +170,44 @@ export class App extends Component {
 					isNotificationSupported &&
 					Notification?.permission === 'granted'
 				) {
-					const notification = new Notification('Reminder', {
+					const title = `Reminder: ${category}`;
+					const notification = new Notification(title, {
 						body,
 						vibrate: true,
+						requireInteraction: true
 					});
 					notification.onclick = () => {
-						
-						if (confirm(body)) {
-							api.sendEvent({
-								state: 'completed',
-								category,
-							}).then(()=> {
-								console.log(`Complete the event of type: ${type}`)
-							}).catch(console.error)
-						} else {
-							api.sendEvent({
-								state: 'cancel',
-								category,
-							}).then(()=> {
-								console.log(`Cancel the event of type: ${type}`)
-							}).catch(console.error)
-						}
+						console.log(`I click notification`)
+						this.setState({
+							notification: {
+								type,
+								message: body,
+							},
+						});
+						notification.close();
 					};
+					notification.onshow = () => {
+						console.log(`The notification was showed`);
+					}
 					return;
 				}
 
-				if (confirm(body)) {
-					api.sendEvent({
-						state: 'completed',
-						category,
-					}).then(()=> {
-						console.log(`Complete the event of type: ${type}`)
-					}).catch(console.error)
-				} else {
-					api.sendEvent({
-						state: 'cancel',
-						category,
-					}).then(()=> {
-						console.log(`Cancel the event of type: ${type}`)
-					}).catch(console.error)
-				}
+				this.setState({
+					notification: {
+						type,
+						message: body,
+					},
+				});
 			}, duration * 1000);
 
 			reminders.push({
 				type,
 				timeout,
-				time
+				time,
 			});
 		}
+
+		console.log(`Reminders`, reminders);
 
 		this.setState({ reminders });
 	};
@@ -214,7 +233,7 @@ export class App extends Component {
 
 	cancelReminders = (type) => {
 		const reminders = [];
-		if(!this.state.reminders.length) {
+		if (!this.state.reminders.length) {
 			this.setState({ reminders });
 			return reminders;
 		}
@@ -233,8 +252,16 @@ export class App extends Component {
 		return reminders;
 	};
 
+	componentWillUnmount() {
+		const {reminders} = this.state;
+		for (const reminder of reminders) {
+			const { timeout } = reminder;
+			clearTimeout(timeout);
+		}
+	}
+
 	render() {
-		const { api, me, isNotificationSupported } = this.state;
+		const { api, me, isNotificationSupported, notification } = this.state;
 		return (
 			<AppContext.Provider
 				value={{
@@ -274,7 +301,57 @@ export class App extends Component {
 						</Switch>
 					</Router>
 				</main>
+				<AppNotification
+					data={notification}
+					onComplete={this.onCompleteNotification}
+					onCancel={this.onCancelNotification}
+				/>
 			</AppContext.Provider>
 		);
 	}
+}
+
+function AppNotification({ data, onComplete, onCancel }) {
+	let show = !!data;
+	const classNames = [styles['notification-container']];
+	if (show) {
+		classNames.push(styles['show']);
+	}
+
+	let type, message;
+	if (data) {
+		type = data.type;
+		message = data.message;
+	}
+
+	return (
+		<div className={classNames.join(' ')}>
+			<div className={styles['notification']}>
+				<div>
+					<h2>{type}</h2>
+					<p>{message}</p>
+				</div>
+				<section>
+					<button
+						onClick={() => {
+							if (type) {
+								onCancel(type);
+							}
+						}}
+					>
+						Cancel
+					</button>
+					<button
+						onClick={() => {
+							if (type) {
+								onComplete(type);
+							}
+						}}
+					>
+						Confirm
+					</button>
+				</section>
+			</div>
+		</div>
+	);
 }
