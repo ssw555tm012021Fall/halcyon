@@ -345,9 +345,9 @@ export class Api {
 		}
 	}
 
+	// Events
 	sendEvent = async ({ state, category }) => {
-		console.log(`I send the event`, { state, category });
-		/*const url = `${this.host}/events`;
+		const url = `${this.host}/events`;
 
 		const body = {
 			state,
@@ -360,16 +360,34 @@ export class Api {
 					authorization: `Bearer ${this.token}`
 				},
 			});
-			const { status } = data;
-			return status === 'success';
+			const { event } = data;
+			return event;
 		} catch (e) {
 			if (e.response?.data?.message) {
 				throw new Error(e.response?.data.message);
 			}
 
 			throw new Error(e.message);
-		}*/
+		}
 	};
 
+	// Goals
+	getGoals = async () => {
+		const url = `${this.host}/goals`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { goals } = data;
+			return goals;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
 
+			throw new Error(e.message);
+		}
+	}
 }

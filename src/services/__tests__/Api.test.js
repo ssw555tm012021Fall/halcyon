@@ -154,3 +154,30 @@ test.skip('Should update an employee reminder', async () => {
 	expect(reminder.startAt).toBe(data.startAt);
 	expect(reminder.endAt).toBe(data.endAt);
 });
+
+test.skip('Should add an event', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const category = 'water';
+	const state = 'completed';
+	const event = await api.sendEvent({
+		category,
+		state
+	});
+	expect(event).toBeDefined();
+	expect(event.category).toBe(category);
+	expect(event.state).toBe(state);
+});
+
+test.only('Should get a list of all the goals', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const me = await api.getMe();
+	const goals = await api.getGoals();
+	expect(goals).toBeDefined();
+	for(const goal of goals) {
+		expect(goal.employeeId).toBe(me.id);
+	}
+});

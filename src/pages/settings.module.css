@@ -31,10 +31,10 @@
 .options .chevron-right {
 	width: 24px;
 	height: 24px;
-	mask-size: cover;
 	background-color: #959595;
 	mask-image: url('../assets/icons/chevron-right.svg');
 	-webkit-mask-image: url('../assets/icons/chevron-right.svg');
+	mask-size: cover;
 }
 
 .option {
