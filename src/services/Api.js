@@ -390,4 +390,47 @@ export class Api {
 			throw new Error(e.message);
 		}
 	}
+
+	getGoal = async (id) => {
+		const url = `${this.host}/goals/${id}`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { goal } = data;
+			return goal;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	addGoal = async ({target, category, frequency}) => {
+		const url = `${this.host}/goals`;
+		const body = {
+			target,
+			category,
+			frequency
+		};
+		try {
+			const { data } = await axios.post(url, body, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { goal } = data;
+			return goal;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
 }

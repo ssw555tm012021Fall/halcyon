@@ -170,7 +170,7 @@ test.skip('Should add an event', async () => {
 	expect(event.state).toBe(state);
 });
 
-test.only('Should get a list of all the goals', async () => {
+test.skip('Should get a list of all the goals', async () => {
 	const api = new Api(host);
 	const token = await api.signIn(credentials);
 	api.setToken(token.authToken);
@@ -180,4 +180,32 @@ test.only('Should get a list of all the goals', async () => {
 	for(const goal of goals) {
 		expect(goal.employeeId).toBe(me.id);
 	}
+});
+
+test.skip('Should get a goal by its id', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const id = '705228672139624449';
+	const goal = await api.getGoal(id);
+	expect(goal).toBeDefined();
+	expect(goal.id).toBe(id);
+});
+
+test.skip('Should add a new goal', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const target = 5;
+	const category = 'water';
+	const frequency = 'daily';
+	const goal = await api.addGoal({
+		target,
+		category,
+		frequency
+	});
+	expect(goal).toBeDefined();
+	expect(goal.target).toBe(target);
+	expect(goal.category).toBe(category);
+	expect(goal.frequency).toBe(frequency);
 });
