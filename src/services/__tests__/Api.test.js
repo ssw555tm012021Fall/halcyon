@@ -227,3 +227,13 @@ test.skip('Should update an existing goal', async () => {
 	expect(goal.target).toBe(target);
 	expect(goal.frequency).toBe(frequency);
 });
+
+test.skip('Should delete an existing goal', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const id = '705499069443047425';
+	const response = await api.deleteGoal(id);
+	expect(response).toBeDefined();
+	expect(response).toBe(id);
+});

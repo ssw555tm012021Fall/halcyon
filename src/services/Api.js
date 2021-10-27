@@ -456,4 +456,23 @@ export class Api {
 			throw new Error(e.message);
 		}
 	}
+
+	deleteGoal = async (id) => {
+		const url = `${this.host}/goals/${id}`;
+		try {
+			const { data } = await axios.delete(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { id } = data;
+			return id;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
 }
