@@ -433,4 +433,27 @@ export class Api {
 			throw new Error(e.message);
 		}
 	}
+
+	updateGoal = async ({id, target, frequency}) => {
+		const url = `${this.host}/goals/${id}`;
+		const body = {
+			target,
+			frequency
+		};
+		try {
+			const { data } = await axios.put(url, body, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { goal } = data;
+			return goal;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
 }

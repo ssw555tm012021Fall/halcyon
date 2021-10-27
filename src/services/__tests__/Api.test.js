@@ -209,3 +209,21 @@ test.skip('Should add a new goal', async () => {
 	expect(goal.category).toBe(category);
 	expect(goal.frequency).toBe(frequency);
 });
+
+test.skip('Should update an existing goal', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const id = '705228672139624449';
+	const target = 5;
+	const frequency = 'yearly';
+	const goal = await api.updateGoal({
+		id,
+		target,
+		frequency
+	});
+	expect(goal).toBeDefined();
+	expect(goal.id).toBe(id);
+	expect(goal.target).toBe(target);
+	expect(goal.frequency).toBe(frequency);
+});
