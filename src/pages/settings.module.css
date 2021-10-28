@@ -7,7 +7,7 @@
 	padding-top: 20px;
 }
 
-.settings > div {
+.settings > div{
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -15,8 +15,22 @@
 	align-items: center;
 }
 
+.options-container {
+	width: 90%;
+}
+
+.options-container h4 {
+	padding: 0;
+	text-transform: capitalize;
+	margin-top: 40px;
+	margin-bottom: 10px;
+	
+	padding-left: 20px;
+	
+}
+
 .options {
-    width: 90%;
+    width: 100%;
     min-height: 52px;
     border: 1px solid #c4c4c4;
 	border-radius: 12px;
@@ -31,16 +45,32 @@
 .options .chevron-right {
 	width: 24px;
 	height: 24px;
-	background-color: #959595;
+	background-color: #c4c4c4;
 	mask-image: url('../assets/icons/chevron-right.svg');
 	-webkit-mask-image: url('../assets/icons/chevron-right.svg');
 	mask-size: cover;
+}
+
+.add-btn {
+	width: 24px;
+	height: 24px;
+	background-color: #c4c4c4;
+	mask-image: url('../assets/icons/plus.svg');
+	-webkit-mask-image: url('../assets/icons/plus.svg');
+	mask-size: cover;
+	transition: background-color ease-out 220ms;
 }
 
 .option {
 	width: 100%;
 	height: 52px;
 	cursor: pointer;
+}
+
+.option.center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .option > div {
@@ -242,4 +272,25 @@ input:checked + .slider:before {
 	mask-repeat: no-repeat;
     mask-image: url('../assets/icons/x.svg');
 	-webkit-mask-image: url('../assets/icons/x.svg');
+}
+
+/*Goal*/
+.goal-stage-display footer {
+	
+	border-top: 0px;
+}
+
+.goal-stage-display footer button {
+	width: 90%;
+	background: none;
+	border: 1px solid #c4c4c4;
+	transition: border ease-out 220ms;
+}
+
+.goal-stage-display footer button:hover {
+	border: 1px solid #45C0E9;
+}
+
+.goal-stage-display footer button:hover .add-btn {
+	background-color: #45C0E9;
 }
