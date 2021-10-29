@@ -1,10 +1,15 @@
 .bottom-bar {
 	width: 100%;
-	height: 52px;
 	background: #000;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
+	z-index: 1;
+	height: calc(
+		var(--bottom-bar-height) +
+			env(safe-area-inset-bottom, var(--safe-area-inset))
+	);
+	
 }
 
 .bottom-bar button, .bottom-bar a {
@@ -13,6 +18,7 @@
 	align-items: center;
 	background: none;
 	border: none;
+	margin-bottom: env(safe-area-inset-bottom, var(--safe-area-inset));
 }
 
 .bottom-bar a div {

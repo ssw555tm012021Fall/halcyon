@@ -4,7 +4,8 @@
 	height: 100%;
 	display: flex;
 	flex-direction: column;
-	padding-top: 20px;
+
+	overflow: auto;
 }
 
 .settings > div {
@@ -13,34 +14,64 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin-top: 20px;
+}
+
+.options-container {
+	width: 90%;
+}
+
+.options-container h4 {
+	padding: 0;
+	text-transform: capitalize;
+	margin-top: 40px;
+	margin-bottom: 10px;
+
+	padding-left: 20px;
 }
 
 .options {
-    width: 90%;
-    min-height: 52px;
-    border: 1px solid #c4c4c4;
+	width: 100%;
+	min-height: 52px;
+	border: 1px solid #c4c4c4;
 	border-radius: 12px;
 	margin-left: auto;
 	margin-right: auto;
 }
 
 .options > :not(:last-child) {
-    border-bottom: 1px solid #c4c4c4;
+	border-bottom: 1px solid #c4c4c4;
 }
 
 .options .chevron-right {
 	width: 24px;
 	height: 24px;
-	mask-size: cover;
-	background-color: #959595;
+	background-color: #c4c4c4;
 	mask-image: url('../assets/icons/chevron-right.svg');
 	-webkit-mask-image: url('../assets/icons/chevron-right.svg');
+	mask-size: cover;
+}
+
+.add-btn {
+	width: 24px;
+	height: 24px;
+	background-color: #c4c4c4;
+	mask-image: url('../assets/icons/plus.svg');
+	-webkit-mask-image: url('../assets/icons/plus.svg');
+	mask-size: cover;
+	transition: background-color ease-out 220ms;
 }
 
 .option {
 	width: 100%;
 	height: 52px;
 	cursor: pointer;
+}
+
+.option.center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .option > div {
@@ -117,10 +148,9 @@ input:checked + .slider:before {
 }
 
 .logout {
-	margin-top: auto;
+	margin-top: 50px;
 	width: 90%;
-	height: 52px;
-
+	min-height: 52px;
 	border: 1px solid #c4c4c4;
 	background: none;
 	color: rgb(255, 69, 58);
@@ -129,53 +159,52 @@ input:checked + .slider:before {
 	font-size: 1rem;
 	font-weight: bold;
 	margin-right: auto;
-	margin-bottom: 52px;
-    transition: border ease-out 220ms;
+	transition: border ease-out 220ms;
 }
 
-.logout:focus, .logout:hover {
-    border: 1px solid rgb(255, 69, 58);
+.logout:focus,
+.logout:hover {
+	border: 1px solid rgb(255, 69, 58);
 }
-
 
 /*DIALOG*/
 
 .dialog-container {
-    z-index: 100;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0, 0.5);
-    transform: translateY(100%);
-    transition: transform ease-out 200ms;
+	z-index: 100;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	transform: translateY(100%);
+	transition: transform ease-out 200ms;
 }
 
 .dialog-container.show {
-    transform: translateY(0%);
+	transform: translateY(0%);
 }
 
 .dialog {
-    position: fixed;
-    width: 100%;
-    height: 98%;
-    background: #fff;
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
-    display: flex;
-    flex-direction: column;
-    bottom: 0;
+	position: fixed;
+	width: 100%;
+	height: 98%;
+	background: #fff;
+	border-top-left-radius: 24px;
+	border-top-right-radius: 24px;
+	display: flex;
+	flex-direction: column;
+	bottom: 0;
 }
 
 .dialog > * {
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 .dialog nav {
-    width: 100%;
+	width: 100%;
 	display: flex;
 	justify-content: space-between;
-    height: 50px;
+	height: 50px;
 }
 
 .dialog nav > :last-child {
@@ -191,55 +220,119 @@ input:checked + .slider:before {
 }
 
 .dialog main {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: calc(100% - 150px); 
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	height: calc(100% - 150px);
 }
 
-
 .dialog footer {
-    border-top: 1px solid #eaeaea;
-    width: 100%;
-    height: 100px;
-    margin-top: auto;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+	border-top: 1px solid #eaeaea;
+	width: 100%;
+	height: 100px;
+	margin-top: auto;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
 }
 
 .dialog footer button {
 	width: 200px;
-    cursor: pointer;
-    border: 1px solid #45C0E9;
+	cursor: pointer;
+	border: 1px solid #45c0e9;
 	border-radius: 4px;
 	height: 52px;
 	color: #fff;
 	font-size: 1rem;
 	font-weight: bold;
-	background: #45C0E9;
+	background: #45c0e9;
 	transition: opacity ease-out 220ms;
 }
 
-.dialog .close {
-    margin-top: 16px;
-    margin-left: 16px;
-    width: 24px;
-    height: 24px;
-    background: transparent;
-    outline: none;
-    border: none;
-    padding: 0;
+.dialog nav button {
+	margin-top: 16px;
+	margin-left: 16px;
+	width: 24px;
+	height: 24px;
+	background: transparent;
+	outline: none;
+	border: none;
+	padding: 0;
+}
+
+.dialog nav button > div {
+	width: 24px;
+	height: 24px;
+	mask-size: cover;
+	background-color: #959595;
+	mask-position: center;
+	transition: background-color ease-out 220ms;
+	mask-repeat: no-repeat;
 }
 
 .dialog .close > div {
-    width: 24px;
-    height: 24px;
-    mask-size: cover;
-	background-color: #959595;
-    mask-position: center;
-    transition: background-color ease-out 220ms;
-	mask-repeat: no-repeat;
-    mask-image: url('../assets/icons/x.svg');
+	mask-image: url('../assets/icons/x.svg');
 	-webkit-mask-image: url('../assets/icons/x.svg');
+}
+
+.dialog .back > div {
+	mask-image: url('../assets/icons/back.svg');
+	-webkit-mask-image: url('../assets/icons/back.svg');
+}
+
+/*Goal*/
+.goal-stage-display footer {
+	border-top: 0px;
+}
+
+.goal-stage-display footer button {
+	width: 90%;
+	background: none;
+	border: 1px solid #c4c4c4;
+	transition: border ease-out 220ms;
+}
+
+.goal-stage-display footer button:hover {
+	border: 1px solid #45c0e9;
+}
+
+.goal-stage-display footer button:hover .add-btn {
+	background-color: #45c0e9;
+}
+
+.goal-stage-display .empty {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	font-size: 1.5rem;
+	text-align: center;
+	color: #c4c4c4;
+}
+
+.goal-stage-display .empty > div {
+	width: 90%;
+}
+
+.dialog footer.selected-goal-footer button {
+	width: 150px;
+}
+
+.dialog footer.selected-goal-footer > :first-child {
+	background: rgb(255, 69, 58);
+	border: 1px solid rgb(255, 69, 58);
+}
+
+@media screen and (max-height: 800px) {
+	.logout {
+		margin-bottom: 72px;
+	}
+}
+
+@media screen and (min-height: 800px) {
+	.logout {
+		margin-top: auto;
+		margin-bottom: 52px;
+	}
 }

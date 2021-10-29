@@ -345,9 +345,9 @@ export class Api {
 		}
 	}
 
+	// Events
 	sendEvent = async ({ state, category }) => {
-		console.log(`I send the event`, { state, category });
-		/*const url = `${this.host}/events`;
+		const url = `${this.host}/events`;
 
 		const body = {
 			state,
@@ -360,16 +360,119 @@ export class Api {
 					authorization: `Bearer ${this.token}`
 				},
 			});
-			const { status } = data;
-			return status === 'success';
+			const { event } = data;
+			return event;
 		} catch (e) {
 			if (e.response?.data?.message) {
 				throw new Error(e.response?.data.message);
 			}
 
 			throw new Error(e.message);
-		}*/
+		}
 	};
 
+	// Goals
+	getGoals = async () => {
+		const url = `${this.host}/goals`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { goals } = data;
+			return goals;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
 
+			throw new Error(e.message);
+		}
+	}
+
+	getGoal = async (id) => {
+		const url = `${this.host}/goals/${id}`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { goal } = data;
+			return goal;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	addGoal = async ({target, category, frequency}) => {
+		const url = `${this.host}/goals`;
+		const body = {
+			target,
+			category,
+			frequency
+		};
+		try {
+			const { data } = await axios.post(url, body, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { goal } = data;
+			return goal;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	updateGoal = async ({id, target, frequency}) => {
+		const url = `${this.host}/goals/${id}`;
+		const body = {
+			target,
+			frequency
+		};
+		try {
+			const { data } = await axios.put(url, body, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { goal } = data;
+			return goal;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	deleteGoal = async (id) => {
+		const url = `${this.host}/goals/${id}`;
+		try {
+			const { data } = await axios.delete(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { id } = data;
+			return id;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
 }

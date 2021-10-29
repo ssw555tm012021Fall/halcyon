@@ -23,6 +23,7 @@ export class App extends Component {
 	state = {
 		api: new Api(host),
 		reminders: [],
+		goals: null,
 		isNotificationSupported: !!(
 			window.Notification ||
 			window.webkitNotifications ||
@@ -38,7 +39,10 @@ export class App extends Component {
 			this.getMe(api)
 				.then((me) => {
 					this.setState({ me });
-					return this.prepareReminders();
+					return this.loadReminders();
+				})
+				.then(() => {
+					return this.loadGoals();
 				})
 				.then(() => {
 					console.log(`Load successfully`);
@@ -57,7 +61,7 @@ export class App extends Component {
 		return await api.getMe();
 	};
 
-	prepareReminders = async () => {
+	loadReminders = async () => {
 		if (!localStorage.getItem('reminder-water')) {
 			localStorage.setItem(
 				'reminder-water',
@@ -91,8 +95,6 @@ export class App extends Component {
 				},
 			};
 
-			console.log(`Cache ${type}`, cachedReminder);
-
 			localStorage.setItem(
 				`reminder-${type}`,
 				JSON.stringify(cachedReminder)
@@ -107,6 +109,34 @@ export class App extends Component {
 				});
 			}
 		}
+	};
+
+	loadGoals = async () => {
+		const { api } = this.state;
+		const goals = await api.getGoals();
+		this.setState({
+			goals,
+		});
+	};
+
+	addGoal = (goal) => {
+		const { goals } = this.state;
+		goals.push(goal);
+		this.setState({ goals });
+	};
+
+	updateGoal = (goal) => {
+		const { goals } = this.state;
+		this.setState({
+			goals: goals.map((g) => (`${goal.id}` === `${g.id}` ? goal : g)),
+		});
+	};
+
+	deleteGoal = (id) => {
+		const { goals } = this.state;
+		this.setState({
+			goals: goals.filter((g) => `${id}` !== `${g.id}`),
+		});
 	};
 
 	onCancelNotification = (category) => {
@@ -174,10 +204,10 @@ export class App extends Component {
 					const notification = new Notification(title, {
 						body,
 						vibrate: true,
-						requireInteraction: true
+						requireInteraction: true,
 					});
 					notification.onclick = () => {
-						console.log(`I click notification`)
+						console.log(`I click notification`);
 						this.setState({
 							notification: {
 								type,
@@ -188,7 +218,7 @@ export class App extends Component {
 					};
 					notification.onshow = () => {
 						console.log(`The notification was showed`);
-					}
+					};
 					return;
 				}
 
@@ -253,7 +283,7 @@ export class App extends Component {
 	};
 
 	componentWillUnmount() {
-		const {reminders} = this.state;
+		const { reminders } = this.state;
 		for (const reminder of reminders) {
 			const { timeout } = reminder;
 			clearTimeout(timeout);
@@ -261,7 +291,8 @@ export class App extends Component {
 	}
 
 	render() {
-		const { api, me, isNotificationSupported, notification } = this.state;
+		const { api, me, isNotificationSupported, notification, goals } =
+			this.state;
 		return (
 			<AppContext.Provider
 				value={{
@@ -272,6 +303,11 @@ export class App extends Component {
 					isAuthenticated: localStorage.getItem('token'),
 					createReminders: this.createReminders,
 					cancelReminders: this.cancelReminders,
+					loadGoals: this.loadGoals,
+					goals,
+					addGoal: this.addGoal,
+					updateGoal: this.updateGoal,
+					deleteGoal: this.deleteGoal
 				}}
 			>
 				<main className={styles['app']}>
