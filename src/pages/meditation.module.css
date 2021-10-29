@@ -78,7 +78,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100% - 150px); 
+    height: calc(100% - 150px - env(safe-area-inset-bottom, var(--safe-area-inset)));
 }
 
 .player main > div {

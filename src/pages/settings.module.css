@@ -207,6 +207,20 @@ input:checked + .slider:before {
 	height: 50px;
 }
 
+.dialog select, .dialog input {
+	-webkit-appearance: none;
+	min-width: 150px;
+	max-width: 150px;
+	font-size: 1rem;
+ 	position: relative;
+	border-radius: 4px;
+	padding: 2px 0px;
+	background: transparent;
+	border: 1px solid #c4c4c4;
+	color: #3d3d3d;
+	text-align-last:right;
+}
+
 .dialog nav > :last-child {
 	width: 50px;
 }
@@ -223,7 +237,7 @@ input:checked + .slider:before {
 	display: flex;
 	justify-content: center;
 	align-items: flex-start;
-	height: calc(100% - 150px);
+	height: calc(100% - 150px - env(safe-area-inset-bottom, var(--safe-area-inset)));
 }
 
 .dialog footer {
@@ -247,6 +261,11 @@ input:checked + .slider:before {
 	font-weight: bold;
 	background: #45c0e9;
 	transition: opacity ease-out 220ms;
+}
+
+.dialog footer button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
 }
 
 .dialog nav button {

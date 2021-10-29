@@ -482,14 +482,14 @@ function GoalDialog({ show, onClose, type }) {
 				<GoalSelectStage
 					onBack={() => {
 						setStage('all');
-						setGoal(null)
+						setGoal(null);
 					}}
 					goal={goal}
 					type={type}
 					frequencies={frequencies}
 					onSuccess={() => {
 						setStage('all');
-						setGoal(null)
+						setGoal(null);
 					}}
 				/>
 			);
@@ -597,6 +597,10 @@ function GoalAddStage({ onBack, type, frequencies, onSuccess }) {
 			.then(onSuccess)
 			.catch((e) => alert(e.message));
 	};
+
+	let targetValue;
+	targetValue = parseInt(`${target}`);
+
 	return (
 		<form onSubmit={onSubmit}>
 			<nav>
@@ -631,10 +635,14 @@ function GoalAddStage({ onBack, type, frequencies, onSuccess }) {
 										name={'target'}
 										required
 										type={'number'}
+										pattern="[0-9]"
+										inputMode="decimal"
 										min={1}
 										value={target}
 										onChange={(e) => {
-											setTarget(e.target.value);
+											let { value } = e.target;
+											value = value.replace('.', '');
+											setTarget(value);
 										}}
 									/>
 								</div>
@@ -669,7 +677,13 @@ function GoalAddStage({ onBack, type, frequencies, onSuccess }) {
 				</section>
 			</main>
 			<footer>
-				<button type={'submit'}>Save</button>
+				{isNaN(targetValue) || targetValue < 1 ? (
+					<button type={'submit'} disabled>
+						Save
+					</button>
+				) : (
+					<button type={'submit'}>Save</button>
+				)}
 			</footer>
 		</form>
 	);
@@ -680,16 +694,12 @@ function GoalSelectStage({ goal, onBack, type, frequencies, onSuccess }) {
 	const [target, setTarget] = useState(goal?.target);
 	const [frequency, setFrequency] = useState(goal?.frequency);
 
-	console.log(`Goal`, goal);
-
 	useEffect(() => {
 		if (goal) {
 			setTarget(goal.target);
 			setFrequency(goal.frequency);
 		}
 	}, [goal]);
-
-
 
 	if (!goal) {
 		return null;
@@ -715,16 +725,18 @@ function GoalSelectStage({ goal, onBack, type, frequencies, onSuccess }) {
 			.catch((e) => alert(e.message));
 	};
 	const onDelete = async () => {
-		if(confirm('Are you sure you want to delete the goal?')) {
+		if (confirm('Are you sure you want to delete the goal?')) {
 			api.deleteGoal(goal.id)
-			.then((id)=> {
-				deleteGoal(id);
-				onSuccess();
-			})
-			.catch((e) => alert(e.message));
+				.then((id) => {
+					deleteGoal(id);
+					onSuccess();
+				})
+				.catch((e) => alert(e.message));
 		}
-		
 	};
+
+	let targetValue;
+	targetValue = parseInt(`${target}`);
 	return (
 		<form onSubmit={onSubmit}>
 			<nav>
@@ -759,10 +771,14 @@ function GoalSelectStage({ goal, onBack, type, frequencies, onSuccess }) {
 										name={'target'}
 										required
 										type={'number'}
+										pattern="[0-9]"
+										inputMode="decimal"
 										min={1}
 										value={target}
 										onChange={(e) => {
-											setTarget(e.target.value);
+											let { value } = e.target;
+											value = value.replace('.', '');
+											setTarget(value);
 										}}
 									/>
 								</div>
@@ -801,7 +817,11 @@ function GoalSelectStage({ goal, onBack, type, frequencies, onSuccess }) {
 				<button type={'button'} onClick={onDelete}>
 					Delete
 				</button>
-				<button type={'submit'}>Save</button>
+				{isNaN(targetValue) || targetValue < 1 ? (
+					<button type={'submit'} disabled>Save</button>
+				) : (
+					<button type={'submit'}>Save</button>
+				)}
 			</footer>
 		</form>
 	);
