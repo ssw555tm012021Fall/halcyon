@@ -418,8 +418,9 @@ function GoalDialog({ show, onClose, type }) {
 	if (!type) {
 		return null;
 	}
-	let { goals, loadGoals, addGoal } = useContext(AppContext);
+	let { goals, addGoal } = useContext(AppContext);
 	const [stage, setStage] = useState('all');
+	const [goal, setGoal] = useState(null);
 	goals = goals.filter((goal) => goal.category === type);
 	let frequencies = new Set(['daily', 'weekly', 'monthly', 'yearly']);
 	for (const goal of goals) {
@@ -452,7 +453,8 @@ function GoalDialog({ show, onClose, type }) {
 					goals={goals}
 					frequencies={frequencies}
 					onGoalClick={(goal) => {
-						console.log(goal);
+						setGoal(goal);
+						setStage('selected');
 					}}
 					onAddClick={() => {
 						setStage('add');
@@ -463,13 +465,31 @@ function GoalDialog({ show, onClose, type }) {
 		case 'add':
 			component = (
 				<GoalAddStage
-					onClose={onCloseDialog}
+					onBack={() => {
+						setStage('all');
+					}}
 					type={type}
 					frequencies={frequencies}
 					onSuccess={(goal) => {
-						console.log(`I add a goal`);
 						addGoal(goal);
 						setStage('all');
+					}}
+				/>
+			);
+			break;
+		case 'selected':
+			component = (
+				<GoalSelectStage
+					onBack={() => {
+						setStage('all');
+						setGoal(null)
+					}}
+					goal={goal}
+					type={type}
+					frequencies={frequencies}
+					onSuccess={() => {
+						setStage('all');
+						setGoal(null)
 					}}
 				/>
 			);
@@ -560,7 +580,7 @@ function GoalDisplayStage({
 	);
 }
 
-function GoalAddStage({ onClose, type, frequencies, onSuccess }) {
+function GoalAddStage({ onBack, type, frequencies, onSuccess }) {
 	const { api } = useContext(AppContext);
 	const [target, setTarget] = useState('');
 	const [frequency, setFrequency] = useState(frequencies[0]);
@@ -583,8 +603,8 @@ function GoalAddStage({ onClose, type, frequencies, onSuccess }) {
 				<div>
 					<button
 						type={'button'}
-						className={styles['close']}
-						onClick={onClose}
+						className={styles['back']}
+						onClick={onBack}
 					>
 						<div />
 					</button>
@@ -655,14 +675,12 @@ function GoalAddStage({ onClose, type, frequencies, onSuccess }) {
 	);
 }
 
-function GoalSelectStage({ goal, onClose, type, frequencies, onSuccess }) {
-	if (goal) {
-		frequencies.push(goal.frequency);
-	}
-	frequencies = Array.from(new Set(frequencies));
-	const { api } = useContext(AppContext);
+function GoalSelectStage({ goal, onBack, type, frequencies, onSuccess }) {
+	const { api, updateGoal, deleteGoal } = useContext(AppContext);
 	const [target, setTarget] = useState(goal?.target);
 	const [frequency, setFrequency] = useState(goal?.frequency);
+
+	console.log(`Goal`, goal);
 
 	useEffect(() => {
 		if (goal) {
@@ -671,9 +689,14 @@ function GoalSelectStage({ goal, onClose, type, frequencies, onSuccess }) {
 		}
 	}, [goal]);
 
+
+
 	if (!goal) {
 		return null;
 	}
+
+	frequencies.push(goal.frequency);
+	frequencies = Array.from(new Set(frequencies));
 
 	const onSubmit = async (e) => {
 		e.preventDefault();
@@ -685,13 +708,22 @@ function GoalSelectStage({ goal, onClose, type, frequencies, onSuccess }) {
 		};
 
 		api.updateGoal(data)
-			.then(onSuccess)
+			.then((goal) => {
+				updateGoal(goal);
+				onSuccess();
+			})
 			.catch((e) => alert(e.message));
 	};
 	const onDelete = async () => {
-		api.deleteGoal(goal.id)
-			.then(onSuccess)
+		if(confirm('Are you sure you want to delete the goal?')) {
+			api.deleteGoal(goal.id)
+			.then((id)=> {
+				deleteGoal(id);
+				onSuccess();
+			})
 			.catch((e) => alert(e.message));
+		}
+		
 	};
 	return (
 		<form onSubmit={onSubmit}>
@@ -699,15 +731,15 @@ function GoalSelectStage({ goal, onClose, type, frequencies, onSuccess }) {
 				<div>
 					<button
 						type={'button'}
-						className={styles['close']}
-						onClick={onClose}
+						className={styles['back']}
+						onClick={onBack}
 					>
 						<div />
 					</button>
 				</div>
 
 				<div className={styles['title']}>
-					ADD {type.toUpperCase().replace('_', ' ')} GOAL
+					UPDATE {type.toUpperCase().replace('_', ' ')} GOAL
 				</div>
 				<div></div>
 			</nav>
@@ -742,6 +774,7 @@ function GoalSelectStage({ goal, onClose, type, frequencies, onSuccess }) {
 								<div>
 									<select
 										name="frequency"
+										disabled={frequencies.length <= 1}
 										value={frequency}
 										onChange={(e) => {
 											setFrequency(e.target.value);
@@ -764,7 +797,7 @@ function GoalSelectStage({ goal, onClose, type, frequencies, onSuccess }) {
 					</div>
 				</section>
 			</main>
-			<footer>
+			<footer className={styles['selected-goal-footer']}>
 				<button type={'button'} onClick={onDelete}>
 					Delete
 				</button>

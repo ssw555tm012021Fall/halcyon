@@ -120,10 +120,24 @@ export class App extends Component {
 	};
 
 	addGoal = (goal) => {
-		const {goals} = this.state;
+		const { goals } = this.state;
 		goals.push(goal);
-		this.setState({goals});
-	}
+		this.setState({ goals });
+	};
+
+	updateGoal = (goal) => {
+		const { goals } = this.state;
+		this.setState({
+			goals: goals.map((g) => (`${goal.id}` === `${g.id}` ? goal : g)),
+		});
+	};
+
+	deleteGoal = (id) => {
+		const { goals } = this.state;
+		this.setState({
+			goals: goals.filter((g) => `${id}` !== `${g.id}`),
+		});
+	};
 
 	onCancelNotification = (category) => {
 		const { api } = this.state;
@@ -291,7 +305,9 @@ export class App extends Component {
 					cancelReminders: this.cancelReminders,
 					loadGoals: this.loadGoals,
 					goals,
-					addGoal: this.addGoal
+					addGoal: this.addGoal,
+					updateGoal: this.updateGoal,
+					deleteGoal: this.deleteGoal
 				}}
 			>
 				<main className={styles['app']}>

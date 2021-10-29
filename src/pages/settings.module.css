@@ -249,7 +249,7 @@ input:checked + .slider:before {
 	transition: opacity ease-out 220ms;
 }
 
-.dialog .close {
+.dialog nav button {
 	margin-top: 16px;
 	margin-left: 16px;
 	width: 24px;
@@ -260,7 +260,7 @@ input:checked + .slider:before {
 	padding: 0;
 }
 
-.dialog .close > div {
+.dialog nav button > div {
 	width: 24px;
 	height: 24px;
 	mask-size: cover;
@@ -268,8 +268,16 @@ input:checked + .slider:before {
 	mask-position: center;
 	transition: background-color ease-out 220ms;
 	mask-repeat: no-repeat;
+}
+
+.dialog .close > div {
 	mask-image: url('../assets/icons/x.svg');
 	-webkit-mask-image: url('../assets/icons/x.svg');
+}
+
+.dialog .back > div {
+	mask-image: url('../assets/icons/back.svg');
+	-webkit-mask-image: url('../assets/icons/back.svg');
 }
 
 /*Goal*/
@@ -305,6 +313,15 @@ input:checked + .slider:before {
 
 .goal-stage-display .empty > div {
 	width: 90%;
+}
+
+.dialog footer.selected-goal-footer button {
+	width: 150px;
+}
+
+.dialog footer.selected-goal-footer > :first-child {
+	background: rgb(255, 69, 58);
+	border: 1px solid rgb(255, 69, 58);
 }
 
 @media screen and (max-height: 800px) {
