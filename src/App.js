@@ -119,6 +119,12 @@ export class App extends Component {
 		});
 	};
 
+	addGoal = (goal) => {
+		const {goals} = this.state;
+		goals.push(goal);
+		this.setState({goals});
+	}
+
 	onCancelNotification = (category) => {
 		const { api } = this.state;
 		api.sendEvent({
@@ -285,6 +291,7 @@ export class App extends Component {
 					cancelReminders: this.cancelReminders,
 					loadGoals: this.loadGoals,
 					goals,
+					addGoal: this.addGoal
 				}}
 			>
 				<main className={styles['app']}>

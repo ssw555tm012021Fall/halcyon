@@ -25,13 +25,15 @@ export default function Settings() {
 							setDialogCategory('reminder');
 						}}
 					/>
-					{goals ? <GoalOptions
-						setDialogType={(type) => {
-							setShowDialog(true);
-							setDialogType(type);
-							setDialogCategory('goal');
-						}}
-					/> : null}
+					{goals ? (
+						<GoalOptions
+							setDialogType={(type) => {
+								setShowDialog(true);
+								setDialogType(type);
+								setDialogCategory('goal');
+							}}
+						/>
+					) : null}
 					<button
 						className={styles['logout']}
 						onClick={() => {
@@ -416,10 +418,10 @@ function GoalDialog({ show, onClose, type }) {
 	if (!type) {
 		return null;
 	}
-	let { goals } = useContext(AppContext);
+	let { goals, loadGoals, addGoal } = useContext(AppContext);
 	const [stage, setStage] = useState('all');
 	goals = goals.filter((goal) => goal.category === type);
-	const frequencies = new Set(['daily', 'weekly', 'monthly', 'yearly']);
+	let frequencies = new Set(['daily', 'weekly', 'monthly', 'yearly']);
 	for (const goal of goals) {
 		if (frequencies.has(goal.frequency)) {
 			frequencies.delete(goal.frequency);
@@ -432,18 +434,42 @@ function GoalDialog({ show, onClose, type }) {
 		classNames.push(styles['show']);
 	}
 
+	const onCloseDialog = () => {
+		onClose();
+		setStage('all');
+	};
+
 	let component;
+
+	frequencies = Array.from(frequencies);
 
 	switch (stage) {
 		case 'all':
 			component = (
 				<GoalDisplayStage
-					onClose={onClose}
+					onClose={onCloseDialog}
 					type={type}
 					goals={goals}
-					frequencies={Array.from(frequencies)}
+					frequencies={frequencies}
 					onGoalClick={(goal) => {
 						console.log(goal);
+					}}
+					onAddClick={() => {
+						setStage('add');
+					}}
+				/>
+			);
+			break;
+		case 'add':
+			component = (
+				<GoalAddStage
+					onClose={onCloseDialog}
+					type={type}
+					frequencies={frequencies}
+					onSuccess={(goal) => {
+						console.log(`I add a goal`);
+						addGoal(goal);
+						setStage('all');
 					}}
 				/>
 			);
@@ -459,8 +485,49 @@ function GoalDialog({ show, onClose, type }) {
 	);
 }
 
-function GoalDisplayStage({ onClose, type, goals, onGoalClick, frequencies }) {
-	console.log(`Frequencies`, frequencies)
+function GoalDisplayStage({
+	onClose,
+	type,
+	goals,
+	onGoalClick,
+	frequencies,
+	onAddClick,
+}) {
+	let content = goals.length ? (
+		<div
+			className={styles['options']}
+			style={{
+				marginTop: 20,
+			}}
+		>
+			{goals.map((goal) => {
+				return (
+					<div
+						key={goal.frequency}
+						className={styles['option']}
+						onClick={() => {
+							onGoalClick(goal);
+						}}
+					>
+						<div>
+							<span>
+								{goal.target} times {goal.frequency}
+							</span>
+							<div>
+								<div className={styles['chevron-right']} />
+							</div>
+						</div>
+					</div>
+				);
+			})}
+		</div>
+	) : (
+		<div>You don't have goals for this category</div>
+	);
+	const className = [styles['options-container']];
+	if (!goals.length) {
+		className.push(styles['empty']);
+	}
 	return (
 		<div className={styles['goal-stage-display']}>
 			<nav>
@@ -474,7 +541,58 @@ function GoalDisplayStage({ onClose, type, goals, onGoalClick, frequencies }) {
 					</button>
 				</div>
 
-				<div className={styles['title']}>{type.toUpperCase()} GOALS</div>
+				<div className={styles['title']}>
+					{type.toUpperCase().replace('_', ' ')} GOALS
+				</div>
+				<div></div>
+			</nav>
+			<main>
+				<section className={className.join(' ')}>{content}</section>
+			</main>
+			{frequencies.length ? (
+				<footer>
+					<button onClick={onAddClick}>
+						<img className={styles['add-btn']} />
+					</button>
+				</footer>
+			) : null}
+		</div>
+	);
+}
+
+function GoalAddStage({ onClose, type, frequencies, onSuccess }) {
+	const { api } = useContext(AppContext);
+	const [target, setTarget] = useState('');
+	const [frequency, setFrequency] = useState(frequencies[0]);
+
+	const onSubmit = async (e) => {
+		e.preventDefault();
+		console.table({ type, target, frequency });
+		console.log(`I send the form`);
+		api.addGoal({
+			target: parseInt(`${target}`),
+			frequency,
+			category: type,
+		})
+			.then(onSuccess)
+			.catch((e) => alert(e.message));
+	};
+	return (
+		<form onSubmit={onSubmit}>
+			<nav>
+				<div>
+					<button
+						type={'button'}
+						className={styles['close']}
+						onClick={onClose}
+					>
+						<div />
+					</button>
+				</div>
+
+				<div className={styles['title']}>
+					ADD {type.toUpperCase().replace('_', ' ')} GOAL
+				</div>
 				<div></div>
 			</nav>
 			<main>
@@ -485,39 +603,174 @@ function GoalDisplayStage({ onClose, type, goals, onGoalClick, frequencies }) {
 							marginTop: 20,
 						}}
 					>
-						{goals.map((goal) => {
-							return (
-								<div
-									key={goal.frequency}
-									className={styles['option']}
-									onClick={() => {
-										onGoalClick(goal);
-									}}
-								>
-									<div>
-										<span>{goal.target} times {goal.frequency}</span>
-										<div>
-											<div
-												className={
-													styles['chevron-right']
-												}
-											/>
-										</div>
-									</div>
+						<div className={styles['option']}>
+							<div>
+								<label htmlFor="target">Target</label>
+								<div>
+									<input
+										name={'target'}
+										required
+										type={'number'}
+										min={1}
+										value={target}
+										onChange={(e) => {
+											setTarget(e.target.value);
+										}}
+									/>
 								</div>
-							);
-						})}
+							</div>
+						</div>
+						<div className={styles['option']}>
+							<div>
+								<label htmlFor="frequency">Frequency</label>
+								<div>
+									<select
+										name="frequency"
+										value={frequency}
+										onChange={(e) => {
+											setFrequency(e.target.value);
+										}}
+									>
+										{frequencies.map((frequency) => {
+											return (
+												<option
+													key={frequency}
+													value={frequency}
+												>
+													{frequency}
+												</option>
+											);
+										})}
+									</select>
+								</div>
+							</div>
+						</div>
 					</div>
 				</section>
 			</main>
-			{frequencies.length ? <footer>
-				<button onClick={() => {
-					console.log(`I add a new goal`)
-				}}>
-					<img className={styles['add-btn']} />
+			<footer>
+				<button type={'submit'}>Save</button>
+			</footer>
+		</form>
+	);
+}
+
+function GoalSelectStage({ goal, onClose, type, frequencies, onSuccess }) {
+	if (goal) {
+		frequencies.push(goal.frequency);
+	}
+	frequencies = Array.from(new Set(frequencies));
+	const { api } = useContext(AppContext);
+	const [target, setTarget] = useState(goal?.target);
+	const [frequency, setFrequency] = useState(goal?.frequency);
+
+	useEffect(() => {
+		if (goal) {
+			setTarget(goal.target);
+			setFrequency(goal.frequency);
+		}
+	}, [goal]);
+
+	if (!goal) {
+		return null;
+	}
+
+	const onSubmit = async (e) => {
+		e.preventDefault();
+
+		const data = {
+			id: goal.id,
+			target: parseInt(`${target}`),
+			frequency,
+		};
+
+		api.updateGoal(data)
+			.then(onSuccess)
+			.catch((e) => alert(e.message));
+	};
+	const onDelete = async () => {
+		api.deleteGoal(goal.id)
+			.then(onSuccess)
+			.catch((e) => alert(e.message));
+	};
+	return (
+		<form onSubmit={onSubmit}>
+			<nav>
+				<div>
+					<button
+						type={'button'}
+						className={styles['close']}
+						onClick={onClose}
+					>
+						<div />
+					</button>
+				</div>
+
+				<div className={styles['title']}>
+					ADD {type.toUpperCase().replace('_', ' ')} GOAL
+				</div>
+				<div></div>
+			</nav>
+			<main>
+				<section className={styles['options-container']}>
+					<div
+						className={styles['options']}
+						style={{
+							marginTop: 20,
+						}}
+					>
+						<div className={styles['option']}>
+							<div>
+								<label htmlFor="target">Target</label>
+								<div>
+									<input
+										name={'target'}
+										required
+										type={'number'}
+										min={1}
+										value={target}
+										onChange={(e) => {
+											setTarget(e.target.value);
+										}}
+									/>
+								</div>
+							</div>
+						</div>
+						<div className={styles['option']}>
+							<div>
+								<label htmlFor="frequency">Frequency</label>
+								<div>
+									<select
+										name="frequency"
+										value={frequency}
+										onChange={(e) => {
+											setFrequency(e.target.value);
+										}}
+									>
+										{frequencies.map((frequency) => {
+											return (
+												<option
+													key={frequency}
+													value={frequency}
+												>
+													{frequency}
+												</option>
+											);
+										})}
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</main>
+			<footer>
+				<button type={'button'} onClick={onDelete}>
+					Delete
 				</button>
-			</footer> : null}
-		</div>
+				<button type={'submit'}>Save</button>
+			</footer>
+		</form>
 	);
 }
 
