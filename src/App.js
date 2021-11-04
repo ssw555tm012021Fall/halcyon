@@ -23,6 +23,7 @@ export class App extends Component {
 	state = {
 		api: new Api(host),
 		reminders: [],
+		activities: [],
 		goals: null,
 		isNotificationSupported: !!(
 			window.Notification ||
@@ -45,6 +46,10 @@ export class App extends Component {
 					return this.loadGoals();
 				})
 				.then(() => {
+					return this.loadActivities();
+				})
+				.then(() => {
+					
 					console.log(`Load successfully`);
 				})
 				.catch(console.error);
@@ -118,6 +123,14 @@ export class App extends Component {
 			goals,
 		});
 	};
+
+	loadActivities = async () => {
+		const { api } = this.state;
+		const activities = await api.getMoodActivities();
+		this.setState({
+			activities,
+		});
+	}
 
 	addGoal = (goal) => {
 		const { goals } = this.state;
@@ -291,13 +304,14 @@ export class App extends Component {
 	}
 
 	render() {
-		const { api, me, isNotificationSupported, notification, goals } =
+		const { api, me, isNotificationSupported, notification, goals, activities } =
 			this.state;
 		return (
 			<AppContext.Provider
 				value={{
 					api,
 					me,
+					activities,
 					isNotificationSupported,
 					validateToken: this.validateToken,
 					isAuthenticated: localStorage.getItem('token'),

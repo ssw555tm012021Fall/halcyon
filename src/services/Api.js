@@ -475,4 +475,23 @@ export class Api {
 			throw new Error(e.message);
 		}
 	}
+
+	getMoodActivities = async () => {
+		const url = `${this.host}/moods/activities`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { activities } = data;
+			return activities;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
 }
