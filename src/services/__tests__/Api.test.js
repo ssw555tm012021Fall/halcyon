@@ -46,7 +46,7 @@ test('Should get meditation room by id', async () => {
 	expect(room.id).toBe(id);
 });
 
-test.skip('Should Book meditation room', async () => {
+test.skip('Should book meditation room', async () => {
 	const roomId = '700359396337395473';
 	const time = '14:30';
 	const api = new Api(host);
@@ -236,4 +236,36 @@ test.skip('Should delete an existing goal', async () => {
 	const response = await api.deleteGoal(id);
 	expect(response).toBeDefined();
 	expect(response).toBe(id);
+});
+
+test('Should get mood activities', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const activities = await api.getMoodActivities();
+	expect(activities).toBeDefined();
+	for(const activity of activities) {
+		expect(activity.inputEmotion).toBeDefined();
+		expect(activity.outputEmotion).toBeDefined();
+		expect(activity.activity).toBeDefined();
+	}
+});
+
+test('Should get the personality questions', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const questions = await api.getPersonalityQuestions();
+	expect(questions).toBeDefined();
+	expect(questions.length).toBeGreaterThan(0);
+	for(const question of questions) {
+		expect(question.content).toBeDefined();
+		expect(question.options).toBeDefined();
+		expect(question.options.length).toBeGreaterThan(0);
+		for(const option of question.options) {
+			expect(option.content).toBeDefined();
+			expect(option.value).toBeDefined();
+			expect(option.value.length).toBe(1);
+		}
+	}
 });

@@ -11,7 +11,6 @@ export default function Home() {
 		return <Redirect to="/signin" />;
 	}
 	const onActivityClick = () => {
-		console.log(`I click the button`)
 		setShowDialog(true);
 	};
 
