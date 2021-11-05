@@ -494,4 +494,45 @@ export class Api {
 			throw new Error(e.message);
 		}
 	}
+
+	getPersonalityQuestions = async () => {
+		const url = `${this.host}/personality/questions`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { questions } = data;
+			return questions;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	setPersonality = async (personality) => {
+		const url = `${this.host}/me/personality`;
+		const body = {
+			personality
+		};
+		try {
+			const { data } = await axios.put(url, body, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { personality } = data;
+			return personality;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
 }
