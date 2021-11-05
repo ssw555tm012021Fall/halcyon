@@ -106,7 +106,6 @@ function SystemNotificationOption() {
 
 function PersonalityOptions() {
 	const { me } = useContext(AppContext);
-	console.log(`Me`, me);
 	return (
 		<section className={styles['options-container']}>
 			<div className={styles['title']}>
@@ -116,7 +115,7 @@ function PersonalityOptions() {
 				{me?.personality ? (
 					<div className={styles['option']}>
 						<div>
-							<span>Personality </span>
+							<span>Type </span>
 							<div style={{color: '#c4c4c4'}}>
 								{Response.personalities[me.personality.toUpperCase()]?.title}
 							</div>

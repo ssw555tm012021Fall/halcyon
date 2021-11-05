@@ -352,6 +352,6 @@ input:checked + .slider:before {
 @media screen and (min-height: 800px) {
 	.logout {
 		margin-top: 20px;
-		margin-bottom: 52px;
+		margin-bottom: 72px;
 	}
 }
