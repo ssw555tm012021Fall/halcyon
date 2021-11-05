@@ -14,6 +14,7 @@ import Rooms, { SelectedRoom } from './pages/rooms';
 import Sound from './pages/sounds';
 import Meditations from './pages/mediations';
 import Settings from './pages/settings';
+import Personality from './pages/personality';
 
 import { SignIn, SignUp } from './pages/auth';
 import { Api } from './services/Api';
@@ -24,6 +25,7 @@ export class App extends Component {
 		api: new Api(host),
 		reminders: [],
 		activities: [],
+		questions: [],
 		goals: null,
 		isNotificationSupported: !!(
 			window.Notification ||
@@ -33,6 +35,11 @@ export class App extends Component {
 		notification: null,
 	};
 
+	updateMe = (me) => {
+		console.log(`Me`, me);
+		this.setState({me});
+	}
+
 	componentDidMount() {
 		const { api } = this.state;
 		if (localStorage.getItem('token')) {
@@ -40,16 +47,14 @@ export class App extends Component {
 			this.getMe(api)
 				.then((me) => {
 					this.setState({ me });
-					return this.loadReminders();
+					return Promise.all([
+						this.loadReminders(),
+						this.loadGoals(),
+						this.loadActivities(),
+						this.loadPersonalityQuestions(),
+					]);
 				})
 				.then(() => {
-					return this.loadGoals();
-				})
-				.then(() => {
-					return this.loadActivities();
-				})
-				.then(() => {
-					
 					console.log(`Load successfully`);
 				})
 				.catch(console.error);
@@ -130,7 +135,27 @@ export class App extends Component {
 		this.setState({
 			activities,
 		});
-	}
+	};
+
+	loadPersonalityQuestions = async () => {
+		const { api } = this.state;
+		let questions = await api.getPersonalityQuestions();
+		questions = questions
+			.sort((a, b) => (a.index > b.index ? 1 : -1))
+			.map((q, i) => {
+				q.index = i;
+				q.options = q.options
+					.sort((a, b) => (a.index > b.index ? 1 : -1))
+					.map((o, j) => {
+						o.index = j;
+						return o;
+					});
+				return q;
+			});
+		this.setState({
+			questions,
+		});
+	};
 
 	addGoal = (goal) => {
 		const { goals } = this.state;
@@ -304,8 +329,15 @@ export class App extends Component {
 	}
 
 	render() {
-		const { api, me, isNotificationSupported, notification, goals, activities } =
-			this.state;
+		const {
+			api,
+			me,
+			isNotificationSupported,
+			notification,
+			goals,
+			activities,
+			questions,
+		} = this.state;
 		return (
 			<AppContext.Provider
 				value={{
@@ -319,9 +351,11 @@ export class App extends Component {
 					cancelReminders: this.cancelReminders,
 					loadGoals: this.loadGoals,
 					goals,
+					questions,
 					addGoal: this.addGoal,
 					updateGoal: this.updateGoal,
-					deleteGoal: this.deleteGoal
+					deleteGoal: this.deleteGoal,
+					updateMe: this.updateMe,
 				}}
 			>
 				<main className={styles['app']}>
@@ -343,6 +377,11 @@ export class App extends Component {
 								exact
 								path="/settings"
 								component={Settings}
+							/>
+							<Route
+								exact
+								path="/personality"
+								component={Personality}
 							/>
 							<Route exact path="/signup" component={SignUp} />
 							<Route exact path="/signin" component={SignIn} />

@@ -3,6 +3,7 @@ import styles from './settings.module.css';
 import { BottomBar } from '../components/BottomBar';
 import { AppContext } from '../services/AppContext';
 import { Redirect } from 'react-router';
+import { Response } from './personality';
 
 export default function Settings() {
 	const { isAuthenticated, goals } = useContext(AppContext);
@@ -18,6 +19,7 @@ export default function Settings() {
 			<main className={styles['settings']}>
 				<div>
 					<SystemNotificationOption />
+					<PersonalityOptions />
 					<ReminderOptions
 						setDialogType={(type) => {
 							setShowDialog(true);
@@ -95,6 +97,43 @@ function SystemNotificationOption() {
 					<div>
 						<span>System Notifications</span>
 						<Toggle on={isChecked} onToggle={onToggle} />
+					</div>
+				</div>
+			</div>
+		</section>
+	);
+}
+
+function PersonalityOptions() {
+	const { me } = useContext(AppContext);
+	console.log(`Me`, me);
+	return (
+		<section className={styles['options-container']}>
+			<div className={styles['title']}>
+				<h4>Personality</h4>
+			</div>
+			<div className={styles['options']}>
+				{me?.personality ? (
+					<div className={styles['option']}>
+						<div>
+							<span>Personality </span>
+							<div style={{color: '#c4c4c4'}}>
+								{Response.personalities[me.personality.toUpperCase()]?.title}
+							</div>
+						</div>
+					</div>
+				) : null}
+				<div
+					className={styles['option']}
+					onClick={() => {
+						window.location.href = '/personality';
+					}}
+				>
+					<div>
+						<span>Take Quiz</span>
+						<div>
+							<div className={styles['chevron-right']}></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -818,7 +857,9 @@ function GoalSelectStage({ goal, onBack, type, frequencies, onSuccess }) {
 					Delete
 				</button>
 				{isNaN(targetValue) || targetValue < 1 ? (
-					<button type={'submit'} disabled>Save</button>
+					<button type={'submit'} disabled>
+						Save
+					</button>
 				) : (
 					<button type={'submit'}>Save</button>
 				)}

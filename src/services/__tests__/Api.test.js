@@ -261,7 +261,7 @@ test('Should get the personality questions', async () => {
 	for(const question of questions) {
 		expect(question.content).toBeDefined();
 		expect(question.options).toBeDefined();
-		expect(question.options.length).toBeGreaterThan(0);
+		expect(question.options.length).toBe(2);
 		for(const option of question.options) {
 			expect(option.content).toBeDefined();
 			expect(option.value).toBeDefined();
