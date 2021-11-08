@@ -82,6 +82,7 @@ function Meditation({ id, name, description, credit, length, url, onClick }) {
 }
 
 class Player extends Component {
+	
 	timeInterval = 1000;
 	state = {
 		isStarted: false,
@@ -182,6 +183,7 @@ class Player extends Component {
 	};
 
 	onFinish = () => {
+		const {api} = this.context;
 		this.onClose();
 		alert('Meditation completed');
 	};

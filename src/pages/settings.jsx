@@ -114,10 +114,22 @@ function PersonalityOptions() {
 			<div className={styles['options']}>
 				{me?.personality ? (
 					<div className={styles['option']}>
-						<div>
+						<div
+							onClick={() => {
+								const { site } =
+									Response.personalities[
+										me.personality.toUpperCase()
+									];
+								window.open(site, '_blank');
+							}}
+						>
 							<span>Type </span>
-							<div style={{color: '#c4c4c4'}}>
-								{Response.personalities[me.personality.toUpperCase()]?.title}
+							<div style={{ color: '#c4c4c4' }}>
+								{
+									Response.personalities[
+										me.personality.toUpperCase()
+									]?.title
+								}
 							</div>
 						</div>
 					</div>
@@ -626,7 +638,6 @@ function GoalAddStage({ onBack, type, frequencies, onSuccess }) {
 	const onSubmit = async (e) => {
 		e.preventDefault();
 		console.table({ type, target, frequency });
-		console.log(`I send the form`);
 		api.addGoal({
 			target: parseInt(`${target}`),
 			frequency,
