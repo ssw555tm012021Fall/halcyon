@@ -46,7 +46,7 @@ test('Should get meditation room by id', async () => {
 	expect(room.id).toBe(id);
 });
 
-test.skip('Should Book meditation room', async () => {
+test.skip('Should book meditation room', async () => {
 	const roomId = '700359396337395473';
 	const time = '14:30';
 	const api = new Api(host);
@@ -153,4 +153,119 @@ test.skip('Should update an employee reminder', async () => {
 	expect(reminder.interval).toBe(data.interval);
 	expect(reminder.startAt).toBe(data.startAt);
 	expect(reminder.endAt).toBe(data.endAt);
+});
+
+test.skip('Should add an event', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const category = 'water';
+	const state = 'completed';
+	const event = await api.sendEvent({
+		category,
+		state
+	});
+	expect(event).toBeDefined();
+	expect(event.category).toBe(category);
+	expect(event.state).toBe(state);
+});
+
+test.skip('Should get a list of all the goals', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const me = await api.getMe();
+	const goals = await api.getGoals();
+	expect(goals).toBeDefined();
+	for(const goal of goals) {
+		expect(goal.employeeId).toBe(me.id);
+	}
+});
+
+test.skip('Should get a goal by its id', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const id = '705228672139624449';
+	const goal = await api.getGoal(id);
+	expect(goal).toBeDefined();
+	expect(goal.id).toBe(id);
+});
+
+test.skip('Should add a new goal', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const target = 5;
+	const category = 'water';
+	const frequency = 'daily';
+	const goal = await api.addGoal({
+		target,
+		category,
+		frequency
+	});
+	expect(goal).toBeDefined();
+	expect(goal.target).toBe(target);
+	expect(goal.category).toBe(category);
+	expect(goal.frequency).toBe(frequency);
+});
+
+test.skip('Should update an existing goal', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const id = '705228672139624449';
+	const target = 5;
+	const frequency = 'yearly';
+	const goal = await api.updateGoal({
+		id,
+		target,
+		frequency
+	});
+	expect(goal).toBeDefined();
+	expect(goal.id).toBe(id);
+	expect(goal.target).toBe(target);
+	expect(goal.frequency).toBe(frequency);
+});
+
+test.skip('Should delete an existing goal', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const id = '705499069443047425';
+	const response = await api.deleteGoal(id);
+	expect(response).toBeDefined();
+	expect(response).toBe(id);
+});
+
+test('Should get mood activities', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const activities = await api.getMoodActivities();
+	expect(activities).toBeDefined();
+	for(const activity of activities) {
+		expect(activity.inputEmotion).toBeDefined();
+		expect(activity.outputEmotion).toBeDefined();
+		expect(activity.activity).toBeDefined();
+	}
+});
+
+test('Should get the personality questions', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const questions = await api.getPersonalityQuestions();
+	expect(questions).toBeDefined();
+	expect(questions.length).toBeGreaterThan(0);
+	for(const question of questions) {
+		expect(question.content).toBeDefined();
+		expect(question.options).toBeDefined();
+		expect(question.options.length).toBe(2);
+		for(const option of question.options) {
+			expect(option.content).toBeDefined();
+			expect(option.value).toBeDefined();
+			expect(option.value.length).toBe(1);
+		}
+	}
 });

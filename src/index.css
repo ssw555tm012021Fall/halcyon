@@ -1,5 +1,7 @@
 :root {
+	--safe-area-inset: 20px;
 	--accent-color: #decd63;
+	--bottom-bar-height: 50px;
 	--swiper-theme-color: #333333 !important;
 	--sidebar-width: 380px;
 	--tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
@@ -11,8 +13,8 @@ body {
 	-webkit-overflow-scrolling: touch;
 	text-rendering: optimizeSpeed;
 	margin: 0;
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 	overflow: hidden;
 }
 
@@ -29,32 +31,58 @@ body {
 }
 
 #root {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
-  }
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
 
 .view {
 	position: fixed;
 	overflow: hidden;
 	width: 100%;
 	height: 100%;
-	display: grid; 
-	grid-auto-columns: 1fr; 
-	grid-template-columns: 1fr; 
-	grid-template-rows: 52px 1fr 52px;
-	gap: 0px 0px; 
-	grid-template-areas: 
-	  "header"
-	  "content"
-	  "navigation"; 
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1fr;
+	grid-template-rows: 52px 1fr calc(
+			var(--bottom-bar-height) +
+				env(safe-area-inset-bottom, var(--safe-area-inset))
+		);
+	gap: 0px 0px;
+	grid-template-areas:
+		'header'
+		'content'
+		'navigation';
 }
 
-.view header {
+.personality {
+	position: fixed;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1fr;
+	grid-template-rows: 52px 1fr calc(
+			62px +
+				env(safe-area-inset-bottom, var(--safe-area-inset))
+		);
+	gap: 0px 0px;
+	grid-template-areas:
+		'header'
+		'content'
+		'navigation';
+}
+
+.view header, .personality header {
 	height: 52px;
 	border-bottom: 1px solid #eaeaea;
 	display: flex;
@@ -63,8 +91,15 @@ body {
 	grid-area: header;
 }
 
-.view main {
+.view main, .personality main {
 	grid-area: content;
 }
 
-.navigation { grid-area: navigation; }
+.navigation {
+	grid-area: navigation;
+}
+
+.personality footer {
+	height: 62px;
+	grid-area: navigation;
+}

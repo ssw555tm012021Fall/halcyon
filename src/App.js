@@ -14,6 +14,7 @@ import Rooms, { SelectedRoom } from './pages/rooms';
 import Sound from './pages/sounds';
 import Meditations from './pages/mediations';
 import Settings from './pages/settings';
+import Personality from './pages/personality';
 
 import { SignIn, SignUp } from './pages/auth';
 import { Api } from './services/Api';
@@ -23,6 +24,9 @@ export class App extends Component {
 	state = {
 		api: new Api(host),
 		reminders: [],
+		activities: [],
+		questions: [],
+		goals: null,
 		isNotificationSupported: !!(
 			window.Notification ||
 			window.webkitNotifications ||
@@ -31,6 +35,11 @@ export class App extends Component {
 		notification: null,
 	};
 
+	updateMe = (me) => {
+		console.log(`Me`, me);
+		this.setState({me});
+	}
+
 	componentDidMount() {
 		const { api } = this.state;
 		if (localStorage.getItem('token')) {
@@ -38,7 +47,12 @@ export class App extends Component {
 			this.getMe(api)
 				.then((me) => {
 					this.setState({ me });
-					return this.prepareReminders();
+					return Promise.all([
+						this.loadReminders(),
+						this.loadGoals(),
+						this.loadActivities(),
+						this.loadPersonalityQuestions(),
+					]);
 				})
 				.then(() => {
 					console.log(`Load successfully`);
@@ -57,7 +71,7 @@ export class App extends Component {
 		return await api.getMe();
 	};
 
-	prepareReminders = async () => {
+	loadReminders = async () => {
 		if (!localStorage.getItem('reminder-water')) {
 			localStorage.setItem(
 				'reminder-water',
@@ -91,8 +105,6 @@ export class App extends Component {
 				},
 			};
 
-			console.log(`Cache ${type}`, cachedReminder);
-
 			localStorage.setItem(
 				`reminder-${type}`,
 				JSON.stringify(cachedReminder)
@@ -107,6 +119,62 @@ export class App extends Component {
 				});
 			}
 		}
+	};
+
+	loadGoals = async () => {
+		const { api } = this.state;
+		const goals = await api.getGoals();
+		this.setState({
+			goals,
+		});
+	};
+
+	loadActivities = async () => {
+		const { api } = this.state;
+		const activities = await api.getMoodActivities();
+		this.setState({
+			activities,
+		});
+	};
+
+	loadPersonalityQuestions = async () => {
+		const { api } = this.state;
+		let questions = await api.getPersonalityQuestions();
+		questions = questions
+			.sort((a, b) => (a.index > b.index ? 1 : -1))
+			.map((q, i) => {
+				q.index = i;
+				q.options = q.options
+					.sort((a, b) => (a.index > b.index ? 1 : -1))
+					.map((o, j) => {
+						o.index = j;
+						return o;
+					});
+				return q;
+			});
+		this.setState({
+			questions,
+		});
+	};
+
+	addGoal = (goal) => {
+		const { goals } = this.state;
+		goals.push(goal);
+		this.setState({ goals });
+	};
+
+	updateGoal = (goal) => {
+		const { goals } = this.state;
+		this.setState({
+			goals: goals.map((g) => (`${goal.id}` === `${g.id}` ? goal : g)),
+		});
+	};
+
+	deleteGoal = (id) => {
+		const { goals } = this.state;
+		this.setState({
+			goals: goals.filter((g) => `${id}` !== `${g.id}`),
+		});
 	};
 
 	onCancelNotification = (category) => {
@@ -174,10 +242,10 @@ export class App extends Component {
 					const notification = new Notification(title, {
 						body,
 						vibrate: true,
-						requireInteraction: true
+						requireInteraction: true,
 					});
 					notification.onclick = () => {
-						console.log(`I click notification`)
+						console.log(`I click notification`);
 						this.setState({
 							notification: {
 								type,
@@ -188,7 +256,7 @@ export class App extends Component {
 					};
 					notification.onshow = () => {
 						console.log(`The notification was showed`);
-					}
+					};
 					return;
 				}
 
@@ -253,7 +321,7 @@ export class App extends Component {
 	};
 
 	componentWillUnmount() {
-		const {reminders} = this.state;
+		const { reminders } = this.state;
 		for (const reminder of reminders) {
 			const { timeout } = reminder;
 			clearTimeout(timeout);
@@ -261,17 +329,33 @@ export class App extends Component {
 	}
 
 	render() {
-		const { api, me, isNotificationSupported, notification } = this.state;
+		const {
+			api,
+			me,
+			isNotificationSupported,
+			notification,
+			goals,
+			activities,
+			questions,
+		} = this.state;
 		return (
 			<AppContext.Provider
 				value={{
 					api,
 					me,
+					activities,
 					isNotificationSupported,
 					validateToken: this.validateToken,
 					isAuthenticated: localStorage.getItem('token'),
 					createReminders: this.createReminders,
 					cancelReminders: this.cancelReminders,
+					loadGoals: this.loadGoals,
+					goals,
+					questions,
+					addGoal: this.addGoal,
+					updateGoal: this.updateGoal,
+					deleteGoal: this.deleteGoal,
+					updateMe: this.updateMe,
 				}}
 			>
 				<main className={styles['app']}>
@@ -293,6 +377,11 @@ export class App extends Component {
 								exact
 								path="/settings"
 								component={Settings}
+							/>
+							<Route
+								exact
+								path="/personality"
+								component={Personality}
 							/>
 							<Route exact path="/signup" component={SignUp} />
 							<Route exact path="/signin" component={SignIn} />
