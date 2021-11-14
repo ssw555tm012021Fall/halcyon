@@ -269,3 +269,25 @@ test('Should get the personality questions', async () => {
 		}
 	}
 });
+
+test('Should get goals achievements', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const goals = await api.getGoalsAchievements();
+	expect(goals).toBeDefined();
+});
+
+test('Should get awards achievements', async () => {
+	const api = new Api(host);
+	const token = await api.signIn(credentials);
+	api.setToken(token.authToken);
+	const awards = await api.getAwardsAchivements();
+	expect(awards).toBeDefined();
+	expect(awards.length).toBeGreaterThan(0);
+	for(const award of awards) {
+		expect(award.title).toBeDefined();
+		expect(award.category).toBeDefined();
+		expect(award.frequency).toBeDefined();
+	}
+});

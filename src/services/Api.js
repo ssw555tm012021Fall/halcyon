@@ -557,4 +557,42 @@ export class Api {
 			throw new Error(e.message);
 		}
 	}
+
+	getGoalsAchievements = async () => {
+		const url = `${this.host}/achievements/goals`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { goals } = data;
+			return goals;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	getAwardsAchivements = async () => {
+		const url = `${this.host}/achievements/awards`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { awards } = data;
+			return awards;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
 }
