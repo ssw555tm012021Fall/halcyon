@@ -5,7 +5,7 @@ import { Redirect } from 'react-router';
 import styles from './home.module.css';
 
 export default function Home() {
-	const { isAuthenticated, activities } = useContext(AppContext);
+	const { isAuthenticated, activities, me } = useContext(AppContext);
 	const [showDialog, setShowDialog] = useState(false);
 	if (!isAuthenticated) {
 		return <Redirect to="/signin" />;
@@ -23,6 +23,38 @@ export default function Home() {
 		);
 	}
 
+	let dialog = null;
+	if (me) {
+		if (me.isDepressed === null) {
+			dialog = (
+				<DepressionQuestionnaire
+					show={showDialog}
+					onClose={() => {
+						setShowDialog(false);
+					}}
+				/>
+			);
+		} else if (me.isDepressed) {
+			dialog = (
+				<EmployeeDepressed
+					show={showDialog}
+					onClose={() => {
+						setShowDialog(false);
+					}}
+				/>
+			);
+		} else {
+			dialog = (
+				<Dialog
+					show={showDialog}
+					onClose={() => {
+						setShowDialog(false);
+					}}
+				/>
+			);
+		}
+	}
+
 	return (
 		<>
 			<div className={'view'}>
@@ -36,15 +68,13 @@ export default function Home() {
 				</main>
 				<BottomBar selected={'home'} />
 			</div>
-			<Dialog show={showDialog} onClose={() => {
-				setShowDialog(false);
-			}} />
+			{dialog}
 		</>
 	);
 }
 
 function Dialog({ onClose, show }) {
-	const { activities } = useContext(AppContext);
+	const { activities, me } = useContext(AppContext);
 	const [inputEmotion, setInputEmotion] = useState('');
 	const [outputEmotion, setOutputEmotion] = useState('');
 
@@ -111,11 +141,15 @@ function Dialog({ onClose, show }) {
 		content = (
 			<div>
 				<div>
-					<button onClick={() => {
-						setInputEmotion('');
-						setOutputEmotion('');
-						onClose();
-					}}><div/></button>
+					<button
+						onClick={() => {
+							setInputEmotion('');
+							setOutputEmotion('');
+							onClose();
+						}}
+					>
+						<div />
+					</button>
 				</div>
 				<div>
 					<div>
@@ -166,4 +200,132 @@ function Dialog({ onClose, show }) {
 		);
 	}
 	return <section className={className.join(' ')}>{content}</section>;
+}
+
+function EmployeeDepressed({ onClose, show }) {
+	const className = [styles['modal-container'], styles['depressed']];
+	if (show) {
+		className.push(styles['show']);
+	}
+	return (
+		<section className={className.join(' ')}>
+			<div>
+				<div>
+					<button
+						onClick={() => {
+							onClose();
+						}}
+					>
+						<div />
+					</button>
+				</div>
+				<div>
+					<div>
+						<p>Seek a Psychiatrist</p>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
+}
+
+function DepressionQuestionnaire({ onClose, show }) {
+	const { api, updateMe, me } = useContext(AppContext);
+	const [isLoading, setIsLoading] = useState(false);
+	const questions = [
+		{
+			content: 'Do you feel tired no matter how much you sleep?',
+		},
+		{
+			content: 'Are you capable of enjoying things right now?',
+		},
+		{
+			content: 'Are you having thoughts of your own death?',
+		},
+	];
+	const [data, setData] = useState([...questions].map(() => undefined));
+	const className = [styles['modal-container'], styles['questionnaire']];
+	if (show) {
+		className.push(styles['show']);
+	}
+
+	const onSubmit = (e) => {
+		e.preventDefault();
+		const isDepressed =
+			data.filter((i) => i).length - data.filter((i) => !i).length > 0;
+		setIsLoading(true);
+		api.setDepression(isDepressed)
+			.then(() => {
+				setIsLoading(false);
+				me.isDepressed = isDepressed;
+				updateMe(me);
+				onClose();
+			})
+			.catch((e) => {
+				setIsLoading(false);
+				alert(e.message)
+			});
+	};
+	const onChange = (i, value) => {
+		try {
+			value = JSON.parse(`${value}`);
+			data[i] = value;
+			setData([...data]);
+		} catch(e) {
+			data[i] = undefined;
+			setData([...data]);
+		}
+	};
+	return (
+		<section className={className.join(' ')}>
+			<form id={'q-form'} onSubmit={onSubmit}>
+				<nav>
+					<button
+						type='button'
+						onClick={() => {
+							setData([...[...questions].map(() => undefined)])
+							document.getElementById('q-form').reset();
+							onClose();
+						}}
+					>
+						<div />
+					</button>
+				</nav>
+				<div>
+					{questions.map((question, i) => {
+						return (
+							<div key={i}>
+								<label>{question.content}</label>
+								<span>
+									<select
+										onChange={(e) => {
+											onChange(i, e.target.value);
+										}}
+										value={data[i]}
+									>
+										<option value={undefined}>
+											Select
+										</option>
+										<option value={true}>Yes</option>
+										<option value={false}>No</option>
+									</select>
+								</span>
+							</div>
+						);
+					})}
+				</div>
+				<footer>
+					{isLoading ||
+					[...data].filter((i) => i !== undefined).length !==
+						questions.length ? (
+						<button type={'button'} disabled>
+							Send
+						</button>
+					) : (
+						<button type={'submit'}>Send</button>
+					)}
+				</footer>
+			</form>
+		</section>
+	);
 }

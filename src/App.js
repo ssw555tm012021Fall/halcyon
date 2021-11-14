@@ -36,7 +36,6 @@ export class App extends Component {
 	};
 
 	updateMe = (me) => {
-		console.log(`Me`, me);
 		this.setState({me});
 	}
 

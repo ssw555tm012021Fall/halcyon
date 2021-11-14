@@ -535,4 +535,26 @@ export class Api {
 			throw new Error(e.message);
 		}
 	}
+
+	setDepression = async (isDepressed) => {
+		const url = `${this.host}/me/depression`;
+		const body = {
+			isDepressed
+		};
+		try {
+			const { data } = await axios.put(url, body, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { isDepressed } = data;
+			return isDepressed;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
 }
