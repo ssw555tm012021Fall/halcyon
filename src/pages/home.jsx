@@ -1,11 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { Chrono } from 'react-chrono';
+
 import { BottomBar } from '../components/BottomBar';
 import { AppContext } from '../services/AppContext';
 import { Redirect } from 'react-router';
 import styles from './home.module.css';
+import moment from 'moment';
 
 export default function Home() {
-	const { isAuthenticated, activities, me } = useContext(AppContext);
+	const { isAuthenticated, activities, me, achievements } =
+		useContext(AppContext);
 	const [showDialog, setShowDialog] = useState(false);
 	if (!isAuthenticated) {
 		return <Redirect to="/signin" />;
@@ -63,9 +67,11 @@ export default function Home() {
 					<div>Home</div>
 					<div>{moodBtn}</div>
 				</header>
-				<main className={styles['content']}>
-					Pending home implimentation
-				</main>
+				{achievements ? (
+					<Achievements />
+				) : (
+					<main className={styles['content']} />
+				)}
 				<BottomBar selected={'home'} />
 			</div>
 			{dialog}
@@ -263,7 +269,7 @@ function DepressionQuestionnaire({ onClose, show }) {
 			})
 			.catch((e) => {
 				setIsLoading(false);
-				alert(e.message)
+				alert(e.message);
 			});
 	};
 	const onChange = (i, value) => {
@@ -271,7 +277,7 @@ function DepressionQuestionnaire({ onClose, show }) {
 			value = JSON.parse(`${value}`);
 			data[i] = value;
 			setData([...data]);
-		} catch(e) {
+		} catch (e) {
 			data[i] = undefined;
 			setData([...data]);
 		}
@@ -281,9 +287,9 @@ function DepressionQuestionnaire({ onClose, show }) {
 			<form id={'q-form'} onSubmit={onSubmit}>
 				<nav>
 					<button
-						type='button'
+						type="button"
 						onClick={() => {
-							setData([...[...questions].map(() => undefined)])
+							setData([...[...questions].map(() => undefined)]);
 							document.getElementById('q-form').reset();
 							onClose();
 						}}
@@ -327,5 +333,79 @@ function DepressionQuestionnaire({ onClose, show }) {
 				</footer>
 			</form>
 		</section>
+	);
+}
+
+function Achievements() {
+	const { achievements } = useContext(AppContext);
+	console.log(achievements);
+	const byType = (item) => {
+		const { type, date } = item;
+		const title = moment(date).format('MMM Do');
+		let cardTitle = '';
+		if (type === 'goal') {
+			switch (item.category) {
+				case 'water':
+					cardTitle = `Goal: Drink water`;
+					break;
+				case 'break':
+					cardTitle = `Goal: Take a break`;
+					break;
+				case 'guided_meditation':
+					cardTitle = `Goal: Meditate (Guided)`;
+					break;
+				case 'meditation':
+					cardTitle = `Goal: Meditate`;
+					break;
+			}
+		} else {
+			cardTitle = `Award: ${item.title}`;
+		}
+
+		return {
+			title,
+			cardTitle,
+		};
+	};
+	const items = achievements.map(byType);
+
+	return (
+		<main className={styles['content']}>
+			<div>
+				<Chrono
+					cardWidth={200}
+					cardHeight={120}
+					mode="VERTICAL"
+					items={items}
+					useReadMore={false}
+					theme={{
+						primary: '#094568',
+						secondary: '#45c0e9',
+						cardBgColor: '#fff',
+						cardForeColor: '#000',
+						titleColor: '#fff',
+					}}
+				>
+					{achievements.map((achievement) => {
+						const { type, date } = achievement;
+						let content = '';
+						if (type === 'goal') {
+							content = `${achievement.target} ${achievement.frequency}`;
+						} else {
+							if (achievement.description) {
+								content = achievement.description;
+							}
+						}
+
+						return (
+							<div className={styles['chrono-item-content']}>
+								<p>{content}</p>
+								<small>{moment(date).format('LLLL')}</small>
+							</div>
+						);
+					})}
+				</Chrono>
+			</div>
+		</main>
 	);
 }

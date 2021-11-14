@@ -27,6 +27,7 @@ export class App extends Component {
 		activities: [],
 		questions: [],
 		goals: null,
+		achievements: null,
 		isNotificationSupported: !!(
 			window.Notification ||
 			window.webkitNotifications ||
@@ -36,8 +37,8 @@ export class App extends Component {
 	};
 
 	updateMe = (me) => {
-		this.setState({me});
-	}
+		this.setState({ me });
+	};
 
 	componentDidMount() {
 		const { api } = this.state;
@@ -48,6 +49,7 @@ export class App extends Component {
 					this.setState({ me });
 					return Promise.all([
 						this.loadReminders(),
+						this.loadAchievements(),
 						this.loadGoals(),
 						this.loadActivities(),
 						this.loadPersonalityQuestions(),
@@ -133,6 +135,29 @@ export class App extends Component {
 		const activities = await api.getMoodActivities();
 		this.setState({
 			activities,
+		});
+	};
+
+	loadAchievements = async () => {
+		const { api } = this.state;
+		let goals = await api.getGoalsAchievements();
+		goals = goals.map((g) => {
+			g.type = 'goal';
+			g.date = g.createdAt;
+			return g;
+		});
+		let awards = await api.getAwardsAchivements();
+		awards = awards.map((a) => {
+			a.type = 'award';
+			a.date = a.createdAt;
+			return a;
+		}).filter(a => a.isCompleted);
+
+		const achievements = [...goals, ...awards].sort(
+			(a, b) => new Date(b.date) - new Date(a.date)
+		);
+		this.setState({
+			achievements,
 		});
 	};
 
@@ -336,6 +361,7 @@ export class App extends Component {
 			goals,
 			activities,
 			questions,
+			achievements
 		} = this.state;
 		return (
 			<AppContext.Provider
@@ -351,6 +377,7 @@ export class App extends Component {
 					loadGoals: this.loadGoals,
 					goals,
 					questions,
+					achievements,
 					addGoal: this.addGoal,
 					updateGoal: this.updateGoal,
 					deleteGoal: this.deleteGoal,
