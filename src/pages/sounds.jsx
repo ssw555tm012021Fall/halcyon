@@ -85,6 +85,7 @@ function Sound({ id, name, description, url, credit, length, onClick }) {
 }
 
 class Player extends Component {
+	static contextType = AppContext;
 	timeInterval = 1000;
 
 	state = {
@@ -100,8 +101,6 @@ class Player extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (!prevProps.show && this.props.show) {
-			console.log(`Props`);
-			console.log(this.props);
 			this.onLoad();
 		}
 	}
@@ -173,7 +172,7 @@ class Player extends Component {
 			isPlaying: true,
 		});
 		sound.play();
-		console.log(`It started`);
+		console.debug(`It started`);
 
 		this.startInterval(remainingTime);
 	};
@@ -181,7 +180,7 @@ class Player extends Component {
 	startInterval = (remainingTime) => {
 		const interval = setInterval(() => {
 			remainingTime -= 1;
-			console.log(`Remaining time: ${remainingTime}`);
+			console.debug(`Remaining time: ${remainingTime}`);
 			if (remainingTime % 60 === 0) {
 				this.setState({ dataIndex: remainingTime / 60 });
 			}
@@ -195,8 +194,19 @@ class Player extends Component {
 	};
 
 	onFinish = () => {
-		this.onClose();
-		alert('Meditation completed');
+		const { api } = this.context;
+		api.sendEvent({
+			state: 'completed',
+			category: 'meditation',
+		})
+			.then(() => {
+				console.log(`I send the event: completed meditation`);
+			})
+			.catch(console.error)
+			.finally(() => {
+				this.onClose();
+				alert('Meditation completed');
+			});
 	};
 
 	reset = () => {
@@ -216,9 +226,20 @@ class Player extends Component {
 	};
 
 	onCancel = () => {
+		const { api } = this.context;
 		// eslint-disable-next-line no-restricted-globals
 		if (confirm('Are you sure you want to cancel the meditation?')) {
-			this.onClose();
+			api.sendEvent({
+				state: 'cancel',
+				category: 'meditation',
+			})
+				.then(() => {
+					console.log(`I send the event: cancel guided_meditation`);
+				})
+				.catch(console.error)
+				.finally(() => {
+					this.onClose();
+				});
 		}
 	};
 
@@ -352,5 +373,3 @@ class Player extends Component {
 		);
 	}
 }
-
-
