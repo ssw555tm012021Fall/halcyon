@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Halcyon
   description: Api documentation for Halcyon
-  version: 1.5.0
+  version: 1.6.0
 servers:
   - url: https://halcyon-next.vercel.app/api
     description: Stable development
@@ -57,10 +57,14 @@ components:
           type: string 
         isConfirmed:
           type: boolean
+        isDepressed:
+          type: boolean
         birthday:
           type: string
           format: date
         gender:
+          type: string
+        personality:
           type: string
     reservation:
       type: object
@@ -128,6 +132,30 @@ components:
         createdAt:
           type: string 
           format: 'date-time'
+    award:
+      type: object
+      properties:
+        id:
+          type: string 
+        employeeId:
+          type: string 
+        title:
+          type: string
+        description:
+          type: string
+        target:
+          type: number
+        category:
+          type: string 
+          enum: [guided_meditation, meditation, water, break]
+        frequency:
+          type: string 
+          enum: [daily, weekly, monthly, yearly]
+        createdAt:
+          type: string 
+          format: 'date-time'
+        isCompleted:
+          type: boolean 
     event:
       type: object
       properties:
@@ -253,6 +281,72 @@ paths:
                     type: string
                   employee: 
                     $ref: '#/components/schemas/employee'
+  /me/personality:
+    put:
+      security:
+        - bearerAuth: []
+      summary: Set the employee personality
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                personality: 
+                  type: string
+                  enum: [intj, intp, entj, entp, infj, infp, enfj, enfp, istj, isfj, estj, esfj, istp, isfp, estp, esfp]
+      responses:
+        '401':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return the personality that was sent
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  personality: 
+                    type: string
+                    enum: [intj, intp, entj, entp, infj, infp, enfj, enfp, istj, isfj, estj, esfj, istp, isfp, estp, esfp]
+  /me/depression:
+    put:
+      security:
+        - bearerAuth: []
+      summary: Set if the employee is depressed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isDepressed: 
+                  type: boolean
+      responses:
+        '401':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return the value that was set for the depression
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  isDepressed: 
+                    type: boolean
                       
   /reservation:
     get:
@@ -936,3 +1030,53 @@ paths:
                     type: array
                     items: 
                       $ref: '#/components/schemas/mood_activity'
+  /achievements/awards:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Get a list of all the awards achievements
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: List of awards
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  awards:   
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/award'
+  /achievements/goals:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Get a list of all the completed goals
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: List of completed goals
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  goals:   
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/goal'

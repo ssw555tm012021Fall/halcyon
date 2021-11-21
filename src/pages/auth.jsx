@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import { startAuthentication } from '@simplewebauthn/browser';
 import { AppContext } from '../services/AppContext';
 import styles from './auth.module.css';
 
@@ -9,14 +10,40 @@ export function SignIn() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	if(isAuthenticated) {
-		return <Redirect to='/'/>
+	if (isAuthenticated) {
+		return <Redirect to="/" />;
 	}
 	const onSubmit = async (e) => {
 		e.preventDefault();
 		setIsLoading(true);
 		try {
-			const token = await api.signIn({ email, password });
+			let token = await api.signIn({ email, password });
+			console.log(`TOKEN`);
+			console.log(token);
+			if (token.isMFAEnabled) {
+				let options = await api.generateAuthenticationOptions({
+					email,
+					password,
+				});
+				options.allowCredentials = options.allowCredentials.map((a) => {
+					return {
+						id: a.id,
+						type: 'public-key',
+					};
+				});
+				console.log(`Options`, options);
+				let assestation = await startAuthentication(options);
+				const verification = await api.verifyAuthentication({
+					email,
+					password,
+					assestation,
+				});
+				const { authToken, expiredAt } = verification;
+				localStorage.setItem('token', authToken);
+				localStorage.setItem('expiredAt', expiredAt);
+				window.location = '/';
+				return;
+			}
 			if (token) {
 				localStorage.setItem('token', token.authToken);
 				localStorage.setItem('expiredAt', token.expiredAt);
@@ -36,7 +63,7 @@ export function SignIn() {
 		<div className={styles['view']}>
 			<form onSubmit={onSubmit}>
 				<picture>
-					<img src="/images/logo.png"/>
+					<img src="/images/logo.png" />
 				</picture>
 				<section>
 					<input
@@ -57,9 +84,11 @@ export function SignIn() {
 						type="password"
 						required
 					/>
-					{hideSignUp ? null : <p>
-						Need an account? <Link to={'/signup'}>Sign Up</Link>
-					</p>}
+					{hideSignUp ? null : (
+						<p>
+							Need an account? <Link to={'/signup'}>Sign Up</Link>
+						</p>
+					)}
 				</section>
 				<section>
 					{isValidEmail && password.length && !isLoading ? (
@@ -91,10 +120,10 @@ export function SignUp() {
 	};
 	const isValidEmail = validateEmail(email);
 
-	if(isAuthenticated) {
-		return <Redirect to='/'/>
+	if (isAuthenticated) {
+		return <Redirect to="/" />;
 	}
-	
+
 	return (
 		<div className={styles['view']}>
 			<form onSubmit={onSubmit}>

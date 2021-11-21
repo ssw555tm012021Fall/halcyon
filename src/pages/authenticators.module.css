@@ -1,0 +1,166 @@
+.authenticators footer {
+	border-top: 1px solid #c4c4c4;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.authenticators header {
+	display: flex;
+	justify-content: space-between;
+}
+
+.authenticators ul {
+    
+	background: #fff;
+    padding-inline-start: 0;
+}
+.authenticators ul li {
+	width: 100%;
+    padding: 8px;
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1fr 1.5fr 1fr;
+	grid-template-rows: 1fr;
+	gap: 0px 0px;
+	grid-template-areas: '. . .';
+    border-bottom: 1px solid #c4c4c4;
+}
+
+.authenticators ul li > :first-child {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 20px;
+    align-items: center;
+}
+
+.authenticators ul li > :first-child input {
+    margin: 0;
+}
+
+.authenticators ul li > :nth-child(2) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.authenticators ul li > :last-child {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.authenticators ul > :first-child {
+    border-top: 1px solid #c4c4c4;
+    margin-top: 40px;
+}
+
+.authenticators header > div {
+	min-width: 60px;
+}
+
+.authenticators header > div button {
+	background: none;
+	border: none;
+	margin-left: 12px;
+}
+
+.authenticators header > div button div {
+	width: 24px;
+	height: 24px;
+	mask-size: cover;
+	background-color: #959595;
+	mask-position: center;
+	transition: background-color ease-out 220ms;
+	mask-repeat: no-repeat;
+	mask-image: url('../assets/icons/x.svg');
+	-webkit-mask-image: url('../assets/icons/x.svg');
+}
+
+.authenticators main {
+	overflow-x: hidden;
+	overflow-y: auto;
+    background: #fafafa;
+}
+
+.authenticators footer button {
+	width: 60%;
+	height: 42px;
+	max-width: 200px;
+	background: #45c0e9;
+	border: 1px solid #45c0e9;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 1.05rem;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.authenticators footer button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+	overflow: hidden;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+/* The slider */
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: 0.4s;
+	transition: 0.4s;
+	overflow: hidden;
+}
+
+.slider:before {
+	position: absolute;
+	content: '';
+	height: 26px;
+	width: 26px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: 0.4s;
+	transition: 0.4s;
+}
+
+input:checked + .slider {
+	background-color: #45c0e9;
+}
+
+input:focus + .slider {
+	box-shadow: 0 0 1px #45c0e9;
+}
+
+input:checked + .slider:before {
+	-webkit-transform: translateX(26px);
+	-ms-transform: translateX(26px);
+	transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+	border-radius: 34px;
+}
+
+.slider.round:before {
+	border-radius: 50%;
+}

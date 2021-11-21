@@ -82,7 +82,7 @@ function Meditation({ id, name, description, credit, length, url, onClick }) {
 }
 
 class Player extends Component {
-	
+	static contextType = AppContext;
 	timeInterval = 1000;
 	state = {
 		isStarted: false,
@@ -147,7 +147,7 @@ class Player extends Component {
 			isStarted: false,
 			isPlaying: false,
 			sound: null,
-			progress: 0
+			progress: 0,
 		});
 		this.props.onClose();
 	};
@@ -167,7 +167,7 @@ class Player extends Component {
 
 	startInterval = () => {
 		const { sound } = this.state;
-		if(this.props.show) {
+		if (this.props.show) {
 			const interval = setInterval(() => {
 				if (!sound) {
 					return;
@@ -177,15 +177,25 @@ class Player extends Component {
 					progress,
 				});
 			}, this.timeInterval);
-	
+
 			this.setState({ interval });
 		}
 	};
 
 	onFinish = () => {
-		const {api} = this.context;
-		this.onClose();
-		alert('Meditation completed');
+		const { api } = this.context;
+		api.sendEvent({
+			state: 'completed',
+			category: 'guided_meditation',
+		})
+			.then(() => {
+				console.log(`I send the event: completed guided_meditation`);
+			})
+			.catch(console.error)
+			.finally(() => {
+				this.onClose();
+				alert('Meditation completed');
+			});
 	};
 
 	reset = () => {
@@ -202,14 +212,25 @@ class Player extends Component {
 			isPlaying: false,
 			isStarted: false,
 			sound: null,
-			progress: 0
+			progress: 0,
 		});
 	};
 
 	onCancel = () => {
+		const { api } = this.context;
 		// eslint-disable-next-line no-restricted-globals
 		if (confirm('Are you sure you want to cancel the meditation?')) {
-			this.onClose();
+			api.sendEvent({
+				state: 'cancel',
+				category: 'guided_meditation',
+			})
+				.then(() => {
+					console.log(`I send the event: cancel guided_meditation`);
+				})
+				.catch(console.error)
+				.finally(() => {
+					this.onClose();
+				});
 		}
 	};
 
@@ -353,5 +374,6 @@ function secondsToTime(e) {
 			.toString()
 			.padStart(2, '0');
 
-	return m + ':' + s;355
+	return m + ':' + s;
+	355;
 }

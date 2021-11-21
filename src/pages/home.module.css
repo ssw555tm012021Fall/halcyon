@@ -14,10 +14,17 @@
 
 .content {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: center;
 	width: 100%;
 	height: 100%;
+	overflow-y: auto;
+}
+
+.content > div {
+	width: 90%;
+	max-height: 100%;
+	
 }
 
 header.header {
@@ -89,10 +96,10 @@ header.header {
 	width: 100%;
 	background: #fff;
 	position: fixed;
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
-    display: flex;
-    flex-direction: column;
+	border-top-left-radius: 24px;
+	border-top-right-radius: 24px;
+	display: flex;
+	flex-direction: column;
 }
 
 .modal-container > :first-child > :first-child {
@@ -109,14 +116,14 @@ header.header {
 }
 
 .modal-container > :first-child button div {
-    width: 24px;
-    height: 24px;
-    mask-size: cover;
+	width: 24px;
+	height: 24px;
+	mask-size: cover;
 	background-color: #959595;
-    mask-position: center;
-    transition: background-color ease-out 220ms;
+	mask-position: center;
+	transition: background-color ease-out 220ms;
 	mask-repeat: no-repeat;
-    mask-image: url('../assets/icons/x.svg');
+	mask-image: url('../assets/icons/x.svg');
 	-webkit-mask-image: url('../assets/icons/x.svg');
 }
 
@@ -140,11 +147,11 @@ header.header {
 	padding: 16px;
 }
 
-.modal-container > :first-child > :nth-child(2)  label {
+.modal-container > :first-child > :nth-child(2) label {
 	max-width: 150px;
 }
 
-.modal-container > :first-child > :nth-child(2)  select {
+.modal-container > :first-child > :nth-child(2) select {
 	min-width: 100px;
 	max-width: 150px;
 	text-transform: capitalize;
@@ -163,6 +170,77 @@ header.header {
 
 .modal-container .result div {
 	padding: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.depressed > :first-child > :nth-child(2) > div p {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+	border-bottom: 0px !important;
+}
+
+.modal-container.questionnaire form {
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1fr;
+	grid-template-rows: 49px 1fr 62px;
+	gap: 0px 0px;
+	grid-template-areas:
+		'.'
+		'.'
+		'.';
+}
+
+.questionnaire footer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-top: 1px solid #c4c4c4;
+}
+
+.modal-container.questionnaire footer button {
+	width: 60%;
+	height: 42px;
+	max-width: 200px;
+	background: #45c0e9;
+	border: 1px solid #45c0e9;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 1.05rem;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.modal-container.questionnaire footer button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.modal-container.questionnaire form > div {
+	flex-direction: column;
+	justify-content: flex-start !important;
+}
+
+.modal-container.questionnaire form > div > div {
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr;
+	gap: 0px 0px;
+	grid-template-areas: '. .';
+	margin: 20px 0px;
+	padding: 8px;
+}
+
+.modal-container.questionnaire form > div > div label {
+	border-bottom: 0px !important;
+}
+
+.modal-container.questionnaire form > div > div span {
 	display: flex;
 	justify-content: center;
 	align-items: center;
