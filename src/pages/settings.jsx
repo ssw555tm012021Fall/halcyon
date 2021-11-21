@@ -20,7 +20,7 @@ export default function Settings() {
 				<div>
 					<SystemNotificationOption />
 					{me ? <MFAOption /> : null}
-					{me ? <AuthenticatorsOptions/> : null}
+					<AuthenticatorsOptions/>
 					<PersonalityOptions />
 					<ReminderOptions
 						setDialogType={(type) => {
@@ -203,10 +203,6 @@ function PersonalityOptions() {
 }
 
 function AuthenticatorsOptions() {
-	const { me } = useContext(AppContext);
-	if (!me.isMFAEnabled) {
-		return null;
-	}
 	return (
 		<section className={styles['options-container']}>
 			<div className={styles['title']}>
