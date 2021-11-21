@@ -6,7 +6,7 @@ import { Redirect } from 'react-router';
 import { Response } from './personality';
 
 export default function Settings() {
-	const { isAuthenticated, goals } = useContext(AppContext);
+	const { isAuthenticated, goals, me } = useContext(AppContext);
 	const [showDialog, setShowDialog] = useState(false);
 	const [dialogType, setDialogType] = useState(null);
 	const [dialogCategory, setDialogCategory] = useState(null);
@@ -19,6 +19,8 @@ export default function Settings() {
 			<main className={styles['settings']}>
 				<div>
 					<SystemNotificationOption />
+					{me ? <MFAOption /> : null}
+					{me ? <AuthenticatorsOptions/> : null}
 					<PersonalityOptions />
 					<ReminderOptions
 						setDialogType={(type) => {
@@ -104,6 +106,54 @@ function SystemNotificationOption() {
 	);
 }
 
+function MFAOption() {
+	const { me, updateMe, api } = useContext(AppContext);
+	const [isChecked, setIsChecked] = useState(me.isMFAEnabled);
+	const [isDisabled, setIsDisabled] = useState(false);
+	const onToggle = async (e) => {
+		const value = e.target.checked;
+		setIsDisabled(true);
+		try {
+			if (value) {
+				await api.setMFA({ isEnabled: true });
+				me.isMFAEnabled = true;
+				setIsChecked(true);
+			} else {
+				await api.setMFA({ isEnabled: false });
+				me.isMFAEnabled = false;
+				setIsChecked(false);
+			}
+			updateMe(me);
+		} catch (e) {
+			alert(e.message);
+		} finally {
+			setIsDisabled(false);
+		}
+	};
+
+	return (
+		<section
+			className={styles['options-container']}
+			style={{
+				marginTop: 20,
+			}}
+		>
+			<div className={styles['options']}>
+				<div className={styles['option']}>
+					<div>
+						<span>Multifactor Authentiaction</span>
+						<Toggle
+							on={isChecked}
+							onToggle={onToggle}
+							isDisabled={isDisabled}
+						/>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
+}
+
 function PersonalityOptions() {
 	const { me } = useContext(AppContext);
 	return (
@@ -142,6 +192,35 @@ function PersonalityOptions() {
 				>
 					<div>
 						<span>Take Quiz</span>
+						<div>
+							<div className={styles['chevron-right']}></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
+}
+
+function AuthenticatorsOptions() {
+	const { me } = useContext(AppContext);
+	if (!me.isMFAEnabled) {
+		return null;
+	}
+	return (
+		<section className={styles['options-container']}>
+			<div className={styles['title']}>
+				<h4>MFA</h4>
+			</div>
+			<div className={styles['options']}>
+				<div
+					className={styles['option']}
+					onClick={() => {
+						window.location.href = '/authenticators';
+					}}
+				>
+					<div>
+						<span>Authenticators</span>
 						<div>
 							<div className={styles['chevron-right']}></div>
 						</div>
@@ -878,10 +957,15 @@ function GoalSelectStage({ goal, onBack, type, frequencies, onSuccess }) {
 	);
 }
 
-function Toggle({ on, onToggle }) {
+function Toggle({ on, onToggle, isDisabled }) {
 	return (
 		<label className={styles['switch']}>
-			<input type="checkbox" checked={on} onChange={onToggle} />
+			<input
+				type="checkbox"
+				checked={on}
+				onChange={onToggle}
+				disabled={isDisabled}
+			/>
 			<span
 				className={[styles['slider'], styles['round']].join(' ')}
 			></span>

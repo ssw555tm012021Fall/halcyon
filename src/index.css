@@ -63,7 +63,7 @@ body {
 		'navigation';
 }
 
-.personality {
+.personality, .authenticators {
 	position: fixed;
 	overflow: hidden;
 	width: 100%;
@@ -82,7 +82,7 @@ body {
 		'navigation';
 }
 
-.view header, .personality header {
+.view header, .personality header, .authenticators header {
 	height: 52px;
 	border-bottom: 1px solid #eaeaea;
 	display: flex;
@@ -91,7 +91,7 @@ body {
 	grid-area: header;
 }
 
-.view main, .personality main {
+.view main, .personality main, .authenticators main {
 	grid-area: content;
 }
 
@@ -99,7 +99,7 @@ body {
 	grid-area: navigation;
 }
 
-.personality footer {
+.personality footer, .authenticators footer{
 	height: 62px;
 	grid-area: navigation;
 }

@@ -611,6 +611,25 @@ export class Api {
 		}
 	}
 
+	generateRegistrationOptions = async () => {
+		const url = `${this.host}/webauthn/generate-registration-options`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { options } = data;
+			return options;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
 	verifyAuthentication = async ({email, password, assestation}) => {
 		const url = `${this.host}/webauthn/verify-authentication`;
 		try {
@@ -624,6 +643,110 @@ export class Api {
 				authToken,
 				expiredAt,
 			};
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	verifyRegistration = async ({attestation}) => {
+		const url = `${this.host}/webauthn/verify-registration`;
+		try {
+			const { data } = await axios.post(url, attestation, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { verified } = data;
+			return {
+				verified,
+			};
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	setMFA = async ({isEnabled}) => {
+		const url = `${this.host}/me/mfa`;
+		const body = {
+			isMFAEnabled: isEnabled 
+		};
+		try {
+			const { data } = await axios.put(url, body, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { isEnabled } = data;
+			return isEnabled;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	getAuthenticators = async () => {
+		const url = `${this.host}/authenticators`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { authenticators } = data;
+			return authenticators;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	updateAuthenticator = async ({id, isEnabled}) => {
+		const url = `${this.host}/authenticators/${id}`;
+		const body = {
+			isEnabled
+		};
+		try {
+			const { data } = await axios.put(url, body, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { isEnabled } = data;
+			return isEnabled;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	deleteAuthenticator = async ({id}) => {
+		console.log(`Id to : ${id}`)
+		const url = `${this.host}/authenticators/${id}`;
+		try {
+			const { data } = await axios.delete(url, {
+				headers: {
+					authorization: `Bearer ${this.token}`
+				},
+			});
+			const { status } = data;
+			return status === 'success';
 		} catch (e) {
 			if (e.response?.data?.message) {
 				throw new Error(e.response?.data.message);

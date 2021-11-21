@@ -15,11 +15,11 @@ import Sound from './pages/sounds';
 import Meditations from './pages/mediations';
 import Settings from './pages/settings';
 import Personality from './pages/personality';
+import Authenticators from './pages/authenticators';
 
 import { SignIn, SignUp } from './pages/auth';
 import { Api } from './services/Api';
-// const host = 'https://halcyon-next.vercel.app/api';
-const host = 'http://localhost:3000/api';
+const host = 'https://halcyon-next.vercel.app/api';
 
 export class App extends Component {
 	state = {
@@ -409,6 +409,11 @@ export class App extends Component {
 								exact
 								path="/personality"
 								component={Personality}
+							/>
+							<Route
+								exact
+								path="/authenticators"
+								component={Authenticators}
 							/>
 							<Route exact path="/signup" component={SignUp} />
 							<Route exact path="/signin" component={SignIn} />
