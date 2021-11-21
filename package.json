@@ -7,6 +7,7 @@
 	"license": "MIT",
 	"dependencies": {
 		"@fseehawer/react-circular-slider": "^2.3.5",
+		"@simplewebauthn/browser": "^4.1.0",
 		"axios": "^0.23.0",
 		"howler": "^2.2.3",
 		"moment": "^2.29.1",

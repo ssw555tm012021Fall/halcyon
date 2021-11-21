@@ -386,7 +386,7 @@ function Achievements() {
 						titleColor: '#fff',
 					}}
 				>
-					{achievements.map((achievement) => {
+					{achievements.map((achievement, i) => {
 						const { type, date } = achievement;
 						let content = '';
 						if (type === 'goal') {
@@ -398,7 +398,7 @@ function Achievements() {
 						}
 
 						return (
-							<div className={styles['chrono-item-content']}>
+							<div key={i} className={styles['chrono-item-content']}>
 								<p>{content}</p>
 								<small>{moment(date).format('LLLL')}</small>
 							</div>

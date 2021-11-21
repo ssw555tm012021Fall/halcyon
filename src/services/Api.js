@@ -38,11 +38,7 @@ export class Api {
 				email,
 				password,
 			});
-			const { authToken, expiredAt } = data;
-			return {
-				authToken,
-				expiredAt,
-			};
+			return data;
 		} catch (e) {
 			if (e.response?.data?.message) {
 				throw new Error(e.response?.data.message);
@@ -587,6 +583,47 @@ export class Api {
 			});
 			const { awards } = data;
 			return awards;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	generateAuthenticationOptions = async ({email, password}) => {
+		const url = `${this.host}/webauthn/generate-authentication-options`;
+		try {
+			const { data } = await axios.get(url, {
+				headers: {
+					authorization: `Basic ${btoa(`${email}:${password}`)}`
+				},
+			});
+			const { options } = data;
+			return options;
+		} catch (e) {
+			if (e.response?.data?.message) {
+				throw new Error(e.response?.data.message);
+			}
+
+			throw new Error(e.message);
+		}
+	}
+
+	verifyAuthentication = async ({email, password, assestation}) => {
+		const url = `${this.host}/webauthn/verify-authentication`;
+		try {
+			const { data } = await axios.post(url, assestation, {
+				headers: {
+					authorization: `Basic ${btoa(`${email}:${password}`)}`
+				},
+			});
+			const { authToken, expiredAt } = data;
+			return {
+				authToken,
+				expiredAt,
+			};
 		} catch (e) {
 			if (e.response?.data?.message) {
 				throw new Error(e.response?.data.message);

@@ -18,7 +18,8 @@ import Personality from './pages/personality';
 
 import { SignIn, SignUp } from './pages/auth';
 import { Api } from './services/Api';
-const host = 'https://halcyon-next.vercel.app/api';
+// const host = 'https://halcyon-next.vercel.app/api';
+const host = 'http://localhost:3000/api';
 
 export class App extends Component {
 	state = {

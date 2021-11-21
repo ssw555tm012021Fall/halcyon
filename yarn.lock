@@ -1693,6 +1693,11 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
+"@simplewebauthn/browser@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@simplewebauthn/browser/-/browser-4.1.0.tgz#3e7fd66729405d6a2a2a187c93577b90a8e41786"
+  integrity sha512-tIsEfShC1rrqrsNb44tOFuSriAFCz4tkdDnCjHfn2rYxgz+t+yqEvuIRfJHQpFrWSnZPdsjrAHtasj6lzfGI6w==
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
