@@ -43,6 +43,12 @@
 	transition: background ease-out 220ms;
 }
 
+.room picture img {
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+}
+
 .room a:hover {
 	border: 1px solid #000;
 	color: #000;

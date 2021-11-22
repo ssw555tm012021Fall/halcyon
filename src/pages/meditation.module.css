@@ -15,17 +15,37 @@
     justify-content: center;
 }
 
-.meditation > div  {
-    cursor: pointer;
-    background: #eaeaea;
+.meditation > div {
+    position: relative;
     width: 80%;
     max-width: 80%;
     height: 70%;
     max-height: 70%;
     border-radius: 8px;
-    padding: 8px;
+    overflow: hidden;
+    background: #eaeaea;
+}
+
+.meditation picture {
+    overflow: hidden;
+}
+
+.meditation picture img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.meditation > div > div  {
+    position: absolute;
+    top: 0;
+    cursor: pointer;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    background: rgba(0,0,0,0.5);
     text-decoration: none;
-    color: #000;
+    color: #fff;
     overflow: hidden;
     display: flex;
     justify-content: center;
