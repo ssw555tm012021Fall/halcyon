@@ -64,7 +64,16 @@ export default function Sounds() {
 	);
 }
 
-function Sound({ id, name, description, url, credit, length, onClick }) {
+function Sound({
+	id,
+	name,
+	description,
+	url,
+	credit,
+	length,
+	onClick,
+	picture,
+}) {
 	return (
 		<div
 			className={styles['sound']}
@@ -79,7 +88,12 @@ function Sound({ id, name, description, url, credit, length, onClick }) {
 				});
 			}}
 		>
-			<div id={id}>{name}</div>
+			<div id={id}>
+				<picture>{picture ? <img src={picture} /> : null}</picture>
+				<div>
+					<h3>{name}</h3>
+				</div>
+			</div>
 		</div>
 	);
 }
