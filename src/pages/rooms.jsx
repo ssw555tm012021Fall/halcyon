@@ -84,6 +84,7 @@ function Room({
 	timeInterval,
 	startAvailableTime,
 	endAvailableTime,
+	picture
 }) {
 	return (
 		<div className={styles['room']}>
@@ -100,7 +101,9 @@ function Room({
 						'hh:mm a'
 					)}`}</span>
 				</div>
-				<picture></picture>
+				<picture>
+					{picture ? <img src={picture}/> : null}
+				</picture>
 			</Link>
 		</div>
 	);
