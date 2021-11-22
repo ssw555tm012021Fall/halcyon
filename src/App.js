@@ -1,4 +1,5 @@
 import React, { Component, useContext } from 'react';
+import { Workbox } from 'workbox-window';
 import moment from 'moment';
 import styles from './app.module.css';
 import {
@@ -43,6 +44,18 @@ export class App extends Component {
 
 	componentDidMount() {
 		const { api } = this.state;
+		if ('serviceWorker' in navigator) {
+			try {
+				const wb = new Workbox('/sw.js');
+				console.debug(`Registering service worker`);
+				wb.addEventListener('message', this.onServiceWorkerEvent);
+
+				wb.register();
+				this.setState({ wb });
+			} catch (e) {
+				console.error(e);
+			}
+		}
 		if (localStorage.getItem('token')) {
 			api.setToken(localStorage.getItem('token'));
 			this.getMe(api)
