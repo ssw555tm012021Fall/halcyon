@@ -1,6 +1,6 @@
 {
 	"name": "halcyon",
-	"version": "1.5.3",
+	"version": "1.5.4",
 	"private": false,
 	"repository": "https://github.com/ssw555tm012021Fall/halcyon",
 	"author": "Jose J. Cruz <jjzcru@gmail.com>",
@@ -19,7 +19,8 @@
 		"react-router-dom": "^5.3.0",
 		"react-scripts": "4.0.3",
 		"styled-jsx": "^4.0.1",
-		"web-vitals": "^1.0.1"
+		"web-vitals": "^1.0.1",
+		"workbox-window": "^6.4.1"
 	},
 	"devDependencies": {
 		"@testing-library/jest-dom": "^5.11.4",
@@ -27,7 +28,8 @@
 		"@testing-library/user-event": "^12.1.10",
 		"husky": "^7.0.2",
 		"lint-staged": "^11.2.3",
-		"prettier": "^2.4.1"
+		"prettier": "^2.4.1",
+		"workbox-build": "^6.4.1"
 	},
 	"husky": {
 		"hooks": {
@@ -36,7 +38,8 @@
 	},
 	"scripts": {
 		"dev": "PORT=5050 react-scripts start",
-		"build": "react-scripts build",
+		"build": "react-scripts build  && npm run build-sw",
+		"build-sw": "node ./src/sw-build.js",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"coverage": "npm test -- --coverage",
