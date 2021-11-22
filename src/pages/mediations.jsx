@@ -58,7 +58,16 @@ export default function Meditations() {
 	);
 }
 
-function Meditation({ id, name, description, credit, length, url, onClick }) {
+function Meditation({
+	id,
+	name,
+	description,
+	credit,
+	length,
+	url,
+	picture,
+	onClick,
+}) {
 	return (
 		<div
 			className={styles['meditation']}
@@ -74,8 +83,11 @@ function Meditation({ id, name, description, credit, length, url, onClick }) {
 			}}
 		>
 			<div id={id}>
-				<h3>{name}</h3>
-				<small>{credit}</small>
+				<picture>{picture ? <img src={picture} /> : null}</picture>
+				<div>
+					<h3>{name}</h3>
+					<small>{credit}</small>
+				</div>
 			</div>
 		</div>
 	);
