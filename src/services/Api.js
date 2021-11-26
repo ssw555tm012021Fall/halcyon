@@ -61,6 +61,10 @@ export class Api {
 			return employee;
 		} catch (e) {
 			if (e.response?.data?.message) {
+				if(e.response?.data.message === 'Expired token') {
+					localStorage.removeItem('token');
+					window.location = '/';
+				}
 				throw new Error(e.response?.data.message);
 			}
 
